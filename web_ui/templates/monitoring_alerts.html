@@ -1,0 +1,648 @@
+{% extends "layout.html" %}
+
+{% block page_title %}Monitoring & Alerts{% endblock %}
+
+{% block page_actions %}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAlertModal">
+    <i class="fas fa-plus me-1"></i> New Alert
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Active Alerts</h5>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary active" id="viewAll">All</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="viewPriceAlerts">Price</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="viewProfitAlerts">Profit</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="viewSystemAlerts">System</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Condition</th>
+                                <th>Created</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alertsTable">
+                            <tr>
+                                <td><span class="badge bg-info">Price</span></td>
+                                <td>BTC/USDT above 70000</td>
+                                <td>2024-04-10</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pause"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-warning">Profit</span></td>
+                                <td>Daily drawdown exceeds 5%</td>
+                                <td>2024-04-12</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pause"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-danger">System</span></td>
+                                <td>CPU usage above 80%</td>
+                                <td>2024-04-13</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pause"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-primary">Trade</span></td>
+                                <td>More than 20 trades in 1h</td>
+                                <td>2024-04-14</td>
+                                <td><span class="badge bg-secondary">Paused</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-success"><i class="fas fa-play"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Notification Channels</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush" id="notificationChannels">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-envelope me-2"></i> Email
+                            <small class="d-block text-muted" id="emailStatus">Not configured</small>
+                        </div>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#configureEmailModal">Configure</button>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fab fa-telegram-plane me-2"></i> Telegram
+                            <small class="d-block text-muted" id="telegramStatus">Not configured</small>
+                        </div>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#configureTelegramModal">Configure</button>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-sms me-2"></i> SMS
+                            <small class="d-block text-muted" id="smsStatus">Not configured</small>
+                        </div>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#configureSmsModal">Configure</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Notifications</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush" id="recentNotifications">
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Price Alert: BTC/USDT</h6>
+                            <small>3 mins ago</small>
+                        </div>
+                        <p class="mb-1">Price rose above 69500 USD</p>
+                        <small class="text-muted">Sent via: Email, Telegram</small>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">System Alert: Memory</h6>
+                            <small>2 hours ago</small>
+                        </div>
+                        <p class="mb-1">Memory usage exceeded 85%</p>
+                        <small class="text-muted">Sent via: Email</small>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Trade Alert: ETH/USDT</h6>
+                            <small>Yesterday</small>
+                        </div>
+                        <p class="mb-1">Profitable trade closed (+3.8%)</p>
+                        <small class="text-muted">Sent via: Telegram</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alert History Section -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Alert History</h5>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary active">Last 24h</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Last 7d</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Last 30d</button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date/Time</th>
+                        <th>Type</th>
+                        <th>Alert</th>
+                        <th>Channels</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-04-14 15:30</td>
+                        <td><span class="badge bg-info">Price</span></td>
+                        <td>BTC/USDT above 69000</td>
+                        <td>Email, Telegram</td>
+                        <td><span class="badge bg-success">Delivered</span></td>
+                    </tr>
+                    <tr>
+                        <td>2024-04-14 12:15</td>
+                        <td><span class="badge bg-danger">System</span></td>
+                        <td>Memory usage above 85%</td>
+                        <td>Email</td>
+                        <td><span class="badge bg-success">Delivered</span></td>
+                    </tr>
+                    <tr>
+                        <td>2024-04-13 21:45</td>
+                        <td><span class="badge bg-warning">Profit</span></td>
+                        <td>Trade closed with 3.8% profit</td>
+                        <td>Telegram</td>
+                        <td><span class="badge bg-success">Delivered</span></td>
+                    </tr>
+                    <tr>
+                        <td>2024-04-13 18:20</td>
+                        <td><span class="badge bg-primary">Trade</span></td>
+                        <td>15 trades in last hour</td>
+                        <td>Email</td>
+                        <td><span class="badge bg-danger">Failed</span></td>
+                    </tr>
+                    <tr>
+                        <td>2024-04-13 09:30</td>
+                        <td><span class="badge bg-info">Price</span></td>
+                        <td>ETH/USDT below 3300</td>
+                        <td>Telegram, SMS</td>
+                        <td><span class="badge bg-success">Delivered</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<!-- Create Alert Modal -->
+<div class="modal fade" id="createAlertModal" tabindex="-1" aria-labelledby="createAlertModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createAlertModalLabel">Create New Alert</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createAlertForm">
+                    <div class="mb-3">
+                        <label for="alertType" class="form-label">Alert Type</label>
+                        <select class="form-select" id="alertType" required>
+                            <option value="" selected disabled>Select alert type...</option>
+                            <option value="price">Price Alert</option>
+                            <option value="profit">Profit/Loss Alert</option>
+                            <option value="system">System Resource Alert</option>
+                            <option value="trade">Trade Count Alert</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Price Alert Fields (initially hidden) -->
+                    <div id="priceAlertFields" class="d-none">
+                        <div class="mb-3">
+                            <label for="pricePair" class="form-label">Trading Pair</label>
+                            <select class="form-select" id="pricePair">
+                                <option value="BTC/USDT">BTC/USDT</option>
+                                <option value="ETH/USDT">ETH/USDT</option>
+                                <option value="SOL/USDT">SOL/USDT</option>
+                                <option value="XRP/USDT">XRP/USDT</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="priceDirection" class="form-label">Direction</label>
+                            <select class="form-select" id="priceDirection">
+                                <option value="above">Above</option>
+                                <option value="below">Below</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="priceThreshold" class="form-label">Price Threshold</label>
+                            <input type="number" class="form-control" id="priceThreshold" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <!-- Profit Alert Fields (initially hidden) -->
+                    <div id="profitAlertFields" class="d-none">
+                        <div class="mb-3">
+                            <label for="profitType" class="form-label">Profit Alert Type</label>
+                            <select class="form-select" id="profitType">
+                                <option value="drawdown">Maximum Drawdown</option>
+                                <option value="daily">Daily Profit/Loss</option>
+                                <option value="trade">Trade Profit/Loss</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profitThreshold" class="form-label">Threshold (%)</label>
+                            <input type="number" class="form-control" id="profitThreshold" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <!-- System Alert Fields (initially hidden) -->
+                    <div id="systemAlertFields" class="d-none">
+                        <div class="mb-3">
+                            <label for="resourceType" class="form-label">Resource Type</label>
+                            <select class="form-select" id="resourceType">
+                                <option value="CPU">CPU Usage</option>
+                                <option value="Memory">Memory Usage</option>
+                                <option value="Disk">Disk Space</option>
+                                <option value="GPU">GPU Usage</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resourceThreshold" class="form-label">Threshold (%)</label>
+                            <input type="number" class="form-control" id="resourceThreshold" min="0" max="100" step="1" value="80">
+                        </div>
+                    </div>
+                    
+                    <!-- Trade Alert Fields (initially hidden) -->
+                    <div id="tradeAlertFields" class="d-none">
+                        <div class="mb-3">
+                            <label for="tradeCount" class="form-label">Trade Count</label>
+                            <input type="number" class="form-control" id="tradeCount" min="1" step="1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="timeframe" class="form-label">Timeframe</label>
+                            <select class="form-select" id="timeframe">
+                                <option value="1h">1 hour</option>
+                                <option value="6h">6 hours</option>
+                                <option value="24h">24 hours</option>
+                                <option value="7d">7 days</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Notification Channels</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="email" id="emailChannel">
+                            <label class="form-check-label" for="emailChannel">
+                                Email
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="telegram" id="telegramChannel">
+                            <label class="form-check-label" for="telegramChannel">
+                                Telegram
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="sms" id="smsChannel">
+                            <label class="form-check-label" for="smsChannel">
+                                SMS
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveAlertBtn">Create Alert</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configure Email Modal -->
+<div class="modal fade" id="configureEmailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configure Email Notifications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="emailConfigForm">
+                    <div class="mb-3">
+                        <label for="sendgridApiKey" class="form-label">SendGrid API Key</label>
+                        <input type="password" class="form-control" id="sendgridApiKey">
+                        <div class="form-text">Enter your SendGrid API key to enable email notifications.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailRecipients" class="form-label">Recipients</label>
+                        <input type="text" class="form-control" id="emailRecipients" placeholder="user@example.com, another@example.com">
+                        <div class="form-text">Enter email addresses separated by commas.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveEmailConfigBtn">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configure Telegram Modal -->
+<div class="modal fade" id="configureTelegramModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configure Telegram Notifications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="telegramConfigForm">
+                    <div class="mb-3">
+                        <label for="telegramBotToken" class="form-label">Bot Token</label>
+                        <input type="password" class="form-control" id="telegramBotToken">
+                        <div class="form-text">Enter your Telegram Bot Token.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telegramChatId" class="form-label">Chat ID</label>
+                        <input type="text" class="form-control" id="telegramChatId">
+                        <div class="form-text">Enter the Chat ID where notifications will be sent.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveTelegramConfigBtn">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configure SMS Modal -->
+<div class="modal fade" id="configureSmsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configure SMS Notifications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="smsConfigForm">
+                    <div class="mb-3">
+                        <label for="twilioAccountSid" class="form-label">Twilio Account SID</label>
+                        <input type="password" class="form-control" id="twilioAccountSid">
+                    </div>
+                    <div class="mb-3">
+                        <label for="twilioAuthToken" class="form-label">Twilio Auth Token</label>
+                        <input type="password" class="form-control" id="twilioAuthToken">
+                    </div>
+                    <div class="mb-3">
+                        <label for="twilioPhoneNumber" class="form-label">Twilio Phone Number</label>
+                        <input type="text" class="form-control" id="twilioPhoneNumber" placeholder="+12345678901">
+                    </div>
+                    <div class="mb-3">
+                        <label for="smsRecipients" class="form-label">Recipients</label>
+                        <input type="text" class="form-control" id="smsRecipients" placeholder="+12345678901, +98765432109">
+                        <div class="form-text">Enter phone numbers separated by commas.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveSmsConfigBtn">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Check notification channels
+function checkNotificationChannels() {
+    fetch('/api/notifications/channels')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const channels = data.channels || [];
+                
+                // Update UI based on available channels
+                if (channels.includes('email')) {
+                    document.getElementById('emailStatus').textContent = 'Configured';
+                    document.getElementById('emailStatus').classList.add('text-success');
+                }
+                
+                if (channels.includes('telegram')) {
+                    document.getElementById('telegramStatus').textContent = 'Configured';
+                    document.getElementById('telegramStatus').classList.add('text-success');
+                }
+                
+                if (channels.includes('sms')) {
+                    document.getElementById('smsStatus').textContent = 'Configured';
+                    document.getElementById('smsStatus').classList.add('text-success');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error checking notification channels:', error);
+        });
+}
+
+// Show appropriate alert form fields based on selection
+document.getElementById('alertType').addEventListener('change', function() {
+    // Hide all fields first
+    document.getElementById('priceAlertFields').classList.add('d-none');
+    document.getElementById('profitAlertFields').classList.add('d-none');
+    document.getElementById('systemAlertFields').classList.add('d-none');
+    document.getElementById('tradeAlertFields').classList.add('d-none');
+    
+    // Show selected fields
+    const selectedValue = this.value;
+    if (selectedValue === 'price') {
+        document.getElementById('priceAlertFields').classList.remove('d-none');
+    } else if (selectedValue === 'profit') {
+        document.getElementById('profitAlertFields').classList.remove('d-none');
+    } else if (selectedValue === 'system') {
+        document.getElementById('systemAlertFields').classList.remove('d-none');
+    } else if (selectedValue === 'trade') {
+        document.getElementById('tradeAlertFields').classList.remove('d-none');
+    }
+});
+
+// Save alert configuration
+document.getElementById('saveAlertBtn').addEventListener('click', function() {
+    const alertType = document.getElementById('alertType').value;
+    if (!alertType) {
+        showAlert('danger', 'Please select an alert type');
+        return;
+    }
+    
+    let alertData = {
+        type: alertType,
+        channels: []
+    };
+    
+    // Add selected channels
+    if (document.getElementById('emailChannel').checked) alertData.channels.push('email');
+    if (document.getElementById('telegramChannel').checked) alertData.channels.push('telegram');
+    if (document.getElementById('smsChannel').checked) alertData.channels.push('sms');
+    
+    // Add type-specific data
+    if (alertType === 'price') {
+        alertData.pair = document.getElementById('pricePair').value;
+        alertData.direction = document.getElementById('priceDirection').value;
+        alertData.threshold = parseFloat(document.getElementById('priceThreshold').value);
+    } else if (alertType === 'profit') {
+        alertData.profitType = document.getElementById('profitType').value;
+        alertData.threshold = parseFloat(document.getElementById('profitThreshold').value);
+    } else if (alertType === 'system') {
+        alertData.resource = document.getElementById('resourceType').value;
+        alertData.threshold = parseFloat(document.getElementById('resourceThreshold').value);
+    } else if (alertType === 'trade') {
+        alertData.count = parseInt(document.getElementById('tradeCount').value);
+        alertData.timeframe = document.getElementById('timeframe').value;
+    }
+    
+    // For testing only - normally would send to server
+    console.log('Alert configuration:', alertData);
+    
+    // Show success message and close modal
+    showAlert('success', 'Alert created successfully');
+    document.querySelector('#createAlertModal .btn-close').click();
+});
+
+// Save email configuration
+document.getElementById('saveEmailConfigBtn').addEventListener('click', function() {
+    const configData = {
+        sendgrid_api_key: document.getElementById('sendgridApiKey').value,
+        recipients: document.getElementById('emailRecipients').value.split(',').map(email => email.trim())
+    };
+    
+    // Would normally send to server
+    console.log('Email configuration:', configData);
+    
+    // Update UI
+    document.getElementById('emailStatus').textContent = 'Configured';
+    document.getElementById('emailStatus').classList.add('text-success');
+    
+    // Show success message and close modal
+    showAlert('success', 'Email configuration saved');
+    document.querySelector('#configureEmailModal .btn-close').click();
+});
+
+// Save Telegram configuration
+document.getElementById('saveTelegramConfigBtn').addEventListener('click', function() {
+    const configData = {
+        bot_token: document.getElementById('telegramBotToken').value,
+        chat_id: document.getElementById('telegramChatId').value
+    };
+    
+    // Would normally send to server
+    console.log('Telegram configuration:', configData);
+    
+    // Update UI
+    document.getElementById('telegramStatus').textContent = 'Configured';
+    document.getElementById('telegramStatus').classList.add('text-success');
+    
+    // Show success message and close modal
+    showAlert('success', 'Telegram configuration saved');
+    document.querySelector('#configureTelegramModal .btn-close').click();
+});
+
+// Save SMS configuration
+document.getElementById('saveSmsConfigBtn').addEventListener('click', function() {
+    const configData = {
+        account_sid: document.getElementById('twilioAccountSid').value,
+        auth_token: document.getElementById('twilioAuthToken').value,
+        phone_number: document.getElementById('twilioPhoneNumber').value,
+        recipients: document.getElementById('smsRecipients').value.split(',').map(phone => phone.trim())
+    };
+    
+    // Would normally send to server
+    console.log('SMS configuration:', configData);
+    
+    // Update UI
+    document.getElementById('smsStatus').textContent = 'Configured';
+    document.getElementById('smsStatus').classList.add('text-success');
+    
+    // Show success message and close modal
+    showAlert('success', 'SMS configuration saved');
+    document.querySelector('#configureSmsModal .btn-close').click();
+});
+
+// Filter alerts by type
+document.getElementById('viewAll').addEventListener('click', function() {
+    // Reset filter (show all rows)
+    const rows = document.querySelectorAll('#alertsTable tr');
+    rows.forEach(row => row.style.display = '');
+    
+    // Update active button
+    document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+    this.classList.add('active');
+});
+
+document.getElementById('viewPriceAlerts').addEventListener('click', function() {
+    // Filter to show only price alerts
+    const rows = document.querySelectorAll('#alertsTable tr');
+    rows.forEach(row => {
+        const alertType = row.querySelector('td:first-child span')?.textContent;
+        row.style.display = alertType === 'Price' ? '' : 'none';
+    });
+    
+    // Update active button
+    document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+    this.classList.add('active');
+});
+
+document.getElementById('viewProfitAlerts').addEventListener('click', function() {
+    // Filter to show only profit alerts
+    const rows = document.querySelectorAll('#alertsTable tr');
+    rows.forEach(row => {
+        const alertType = row.querySelector('td:first-child span')?.textContent;
+        row.style.display = alertType === 'Profit' ? '' : 'none';
+    });
+    
+    // Update active button
+    document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+    this.classList.add('active');
+});
+
+document.getElementById('viewSystemAlerts').addEventListener('click', function() {
+    // Filter to show only system alerts
+    const rows = document.querySelectorAll('#alertsTable tr');
+    rows.forEach(row => {
+        const alertType = row.querySelector('td:first-child span')?.textContent;
+        row.style.display = alertType === 'System' ? '' : 'none';
+    });
+    
+    // Update active button
+    document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+    this.classList.add('active');
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    checkNotificationChannels();
+});
+</script>
+{% endblock %}

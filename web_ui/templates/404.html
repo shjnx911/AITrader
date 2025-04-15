@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}404 - Page Not Found{% endblock %}
+
+{% block page_title %}404 - Page Not Found{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">Page not found!</h4>
+        <p>The page you were looking for does not exist.</p>
+        <hr>
+        <p class="mb-0">Please check the URL or <a href="{{ url_for('dashboard') }}" class="alert-link">return to the dashboard</a>.</p>
+    </div>
+</div>
+{% endblock %}

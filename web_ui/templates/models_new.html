@@ -1,0 +1,793 @@
+{% extends "layout.html" %}
+
+{% block title %}AITradeStrategist - AI Models{% endblock %}
+
+{% block page_title %}AI Models{% endblock %}
+
+{% block page_actions %}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModelModal">
+    <i class="fas fa-plus me-1"></i> Train New Model
+</button>
+{% endblock %}
+
+{% block content %}
+<!-- Models Overview Section -->
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Available Models</h5>
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" class="form-control" placeholder="Search models..." id="modelSearch">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="modelsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Pair</th>
+                                <th>Win Rate</th>
+                                <th>Profit</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-primary">BTC-LightGBM-v2</span>
+                                        <span class="ms-2 badge bg-info">GPU</span>
+                                    </div>
+                                </td>
+                                <td>LightGBM</td>
+                                <td>BTC/USDT</td>
+                                <td>73%</td>
+                                <td class="text-success">+4.8%</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-primary">ETH-LightGBM-v1</span>
+                                        <span class="ms-2 badge bg-info">GPU</span>
+                                    </div>
+                                </td>
+                                <td>LightGBM</td>
+                                <td>ETH/USDT</td>
+                                <td>65%</td>
+                                <td class="text-success">+2.3%</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-primary">XRP-RandomForest-v1</span>
+                                    </div>
+                                </td>
+                                <td>RandomForest</td>
+                                <td>XRP/USDT</td>
+                                <td>58%</td>
+                                <td class="text-danger">-0.5%</td>
+                                <td><span class="badge bg-secondary">Paused</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-primary">SOL-XGBoost-v2</span>
+                                        <span class="ms-2 badge bg-info">GPU</span>
+                                    </div>
+                                </td>
+                                <td>XGBoost</td>
+                                <td>SOL/USDT</td>
+                                <td>67%</td>
+                                <td class="text-success">+3.1%</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-primary">ETH-XGBoost-v1</span>
+                                    </div>
+                                </td>
+                                <td>XGBoost</td>
+                                <td>ETH/USDT</td>
+                                <td>61%</td>
+                                <td class="text-success">+1.5%</td>
+                                <td><span class="badge bg-secondary">Paused</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="row">
+            <!-- AI Engine Stats -->
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">AI Engine Stats</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50 text-center">
+                                    <h6 class="text-muted mb-1">Active Models</h6>
+                                    <h4 class="mb-0">3</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50 text-center">
+                                    <h6 class="text-muted mb-1">Total Models</h6>
+                                    <h4 class="mb-0">5</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50 text-center">
+                                    <h6 class="text-muted mb-1">Avg Win Rate</h6>
+                                    <h4 class="mb-0">64.8%</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50 text-center">
+                                    <h6 class="text-muted mb-1">Last Trained</h6>
+                                    <h4 class="mb-0">2h ago</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <canvas id="modelTypesChart" height="180"></canvas>
+                            <div class="mt-3 d-flex justify-content-around">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2" style="width: 10px; height: 10px; background-color: rgba(40, 167, 69, 0.8); border-radius: 50%;"></div>
+                                    <small>LightGBM</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2" style="width: 10px; height: 10px; background-color: rgba(0, 123, 255, 0.8); border-radius: 50%;"></div>
+                                    <small>XGBoost</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2" style="width: 10px; height: 10px; background-color: rgba(255, 193, 7, 0.8); border-radius: 50%;"></div>
+                                    <small>RandomForest</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Model Recommendations -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Optimization Recommendations</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">XRP-RandomForest-v1</h6>
+                                    <span class="badge bg-warning">Needs Attention</span>
+                                </div>
+                                <p class="mb-1">Optimize feature selection to improve win rate by ~10%</p>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-primary">Optimize Model</button>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">ETH-LightGBM-v1</h6>
+                                    <span class="badge bg-info">Update Available</span>
+                                </div>
+                                <p class="mb-1">Retrain with latest data to improve performance</p>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-primary">Retrain Model</button>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">New Model Suggestion</h6>
+                                    <span class="badge bg-success">Recommended</span>
+                                </div>
+                                <p class="mb-1">DOGE/USDT shows promise for LightGBM model</p>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-primary">Create Model</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Performance Comparison Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Model Performance Comparison</h5>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary active" id="weekCompare">Week</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="monthCompare">Month</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="allTimeCompare">All Time</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="performanceComparisonChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Model View Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Model Details: <span class="text-primary">BTC-LightGBM-v2</span></h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h6>Model Information</h6>
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>Type:</td>
+                                        <td>LightGBM (GPU Accelerated)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Version:</td>
+                                        <td>2.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created:</td>
+                                        <td>April 10, 2024</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Modified:</td>
+                                        <td>April 14, 2024</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Training Data:</td>
+                                        <td>6 months (Oct 2023 - Apr 2024)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Features:</td>
+                                        <td>42 technical indicators</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <h6>Hyperparameters</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td>num_leaves</td>
+                                            <td>31</td>
+                                        </tr>
+                                        <tr>
+                                            <td>learning_rate</td>
+                                            <td>0.05</td>
+                                        </tr>
+                                        <tr>
+                                            <td>max_depth</td>
+                                            <td>-1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>min_data_in_leaf</td>
+                                            <td>20</td>
+                                        </tr>
+                                        <tr>
+                                            <td>feature_fraction</td>
+                                            <td>0.8</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary">View All Parameters</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Performance Metrics</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50">
+                                    <div class="text-muted small">Win Rate</div>
+                                    <div class="h4 mb-0">73%</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50">
+                                    <div class="text-muted small">Profit</div>
+                                    <div class="h4 mb-0 text-success">+4.8%</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50">
+                                    <div class="text-muted small">Trades</div>
+                                    <div class="h4 mb-0">126</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50">
+                                    <div class="text-muted small">Precision</div>
+                                    <div class="h4 mb-0">0.75</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50">
+                                    <div class="text-muted small">Recall</div>
+                                    <div class="h4 mb-0">0.71</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="p-3 border rounded bg-dark bg-opacity-50">
+                                    <div class="text-muted small">F1 Score</div>
+                                    <div class="h4 mb-0">0.73</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h6>Feature Importance</h6>
+                        <canvas id="featureImportanceChart" height="200"></canvas>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary me-2">Edit Model</button>
+                            <button class="btn btn-outline-secondary me-2">Export Model</button>
+                            <button class="btn btn-outline-danger">Delete Model</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Model Modal -->
+<div class="modal fade" id="createModelModal" tabindex="-1" aria-labelledby="createModelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModelModalLabel">Train New AI Model</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createModelForm">
+                    <div class="mb-3">
+                        <label for="modelName" class="form-label">Model Name</label>
+                        <input type="text" class="form-control" id="modelName" placeholder="e.g., BTC-LightGBM-v1">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="modelType" class="form-label">Model Type</label>
+                            <select class="form-select" id="modelType">
+                                <option value="lightgbm">LightGBM</option>
+                                <option value="xgboost">XGBoost</option>
+                                <option value="randomforest">Random Forest</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tradingPair" class="form-label">Trading Pair</label>
+                            <select class="form-select" id="tradingPair">
+                                <option value="BTC/USDT">BTC/USDT</option>
+                                <option value="ETH/USDT">ETH/USDT</option>
+                                <option value="SOL/USDT">SOL/USDT</option>
+                                <option value="XRP/USDT">XRP/USDT</option>
+                                <option value="DOGE/USDT">DOGE/USDT</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="timeframe" class="form-label">Timeframe</label>
+                            <select class="form-select" id="timeframe">
+                                <option value="1m">1 minute</option>
+                                <option value="5m">5 minutes</option>
+                                <option value="15m">15 minutes</option>
+                                <option value="1h" selected>1 hour</option>
+                                <option value="4h">4 hours</option>
+                                <option value="1d">1 day</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="trainingPeriod" class="form-label">Training Period</label>
+                            <select class="form-select" id="trainingPeriod">
+                                <option value="1m">1 month</option>
+                                <option value="3m">3 months</option>
+                                <option value="6m" selected>6 months</option>
+                                <option value="1y">1 year</option>
+                                <option value="max">Maximum available</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="useGPU" checked>
+                        <label class="form-check-label" for="useGPU">Use GPU Acceleration (if available)</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="autoOptimize" checked>
+                        <label class="form-check-label" for="autoOptimize">Auto-optimize hyperparameters</label>
+                    </div>
+                    
+                    <!-- Advanced Options (Initially Collapsed) -->
+                    <div class="mb-3">
+                        <a class="btn btn-sm btn-outline-secondary w-100" data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false" aria-controls="advancedOptions">
+                            Advanced Options <i class="fas fa-chevron-down ms-1"></i>
+                        </a>
+                        <div class="collapse mt-3" id="advancedOptions">
+                            <div class="card card-body">
+                                <h6 class="mb-3">Feature Selection</h6>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="featureRSI" checked>
+                                            <label class="form-check-label" for="featureRSI">
+                                                RSI (Relative Strength Index)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="featureMACD" checked>
+                                            <label class="form-check-label" for="featureMACD">
+                                                MACD (Moving Average Convergence Divergence)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="featureBB" checked>
+                                            <label class="form-check-label" for="featureBB">
+                                                Bollinger Bands
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="featureVolume" checked>
+                                            <label class="form-check-label" for="featureVolume">
+                                                Volume Indicators
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mb-3">Model Hyperparameters</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="learningRate" class="form-label">Learning Rate</label>
+                                        <input type="number" class="form-control" id="learningRate" value="0.05" step="0.01" min="0.01" max="0.5">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="numLeaves" class="form-label">Number of Leaves</label>
+                                        <input type="number" class="form-control" id="numLeaves" value="31" min="10" max="255">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="maxDepth" class="form-label">Max Depth</label>
+                                        <input type="number" class="form-control" id="maxDepth" value="-1" min="-1" max="15">
+                                        <div class="form-text">-1 means no limit</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="minDataInLeaf" class="form-label">Min Data in Leaf</label>
+                                        <input type="number" class="form-control" id="minDataInLeaf" value="20" min="1" max="100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Train Model</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Model Types Distribution Chart
+    const modelTypesCtx = document.getElementById('modelTypesChart').getContext('2d');
+    const modelTypesChart = new Chart(modelTypesCtx, {
+        type: 'pie',
+        data: {
+            labels: ['LightGBM', 'XGBoost', 'RandomForest'],
+            datasets: [{
+                data: [2, 2, 1],
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.8)',
+                    'rgba(0, 123, 255, 0.8)',
+                    'rgba(255, 193, 7, 0.8)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Performance Comparison Chart
+    const perfCompCtx = document.getElementById('performanceComparisonChart').getContext('2d');
+    const perfCompChart = new Chart(perfCompCtx, {
+        type: 'line',
+        data: {
+            labels: ['Apr 8', 'Apr 9', 'Apr 10', 'Apr 11', 'Apr 12', 'Apr 13', 'Apr 14', 'Apr 15'],
+            datasets: [
+                {
+                    label: 'BTC-LightGBM-v2',
+                    data: [0, 1.2, 1.8, 2.5, 3.2, 3.9, 4.2, 4.8],
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    backgroundColor: 'transparent',
+                    tension: 0.4
+                },
+                {
+                    label: 'ETH-LightGBM-v1',
+                    data: [0, 0.8, 1.3, 1.7, 2.0, 2.3, 2.3, 2.3],
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    backgroundColor: 'transparent',
+                    tension: 0.4
+                },
+                {
+                    label: 'SOL-XGBoost-v2',
+                    data: [0, 1.0, 1.5, 2.0, 2.2, 2.5, 2.8, 3.1],
+                    borderColor: 'rgba(255, 193, 7, 1)',
+                    backgroundColor: 'transparent',
+                    tension: 0.4
+                },
+                {
+                    label: 'XRP-RandomForest-v1',
+                    data: [0, 0.5, 0.2, 0.0, -0.3, -0.5, -0.5, -0.5],
+                    borderColor: 'rgba(220, 53, 69, 1)',
+                    backgroundColor: 'transparent',
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) label += ': ';
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y + '%';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Feature Importance Chart
+    const featureImportanceCtx = document.getElementById('featureImportanceChart').getContext('2d');
+    const featureImportanceChart = new Chart(featureImportanceCtx, {
+        type: 'bar',
+        data: {
+            labels: ['RSI', 'MACD', 'BB Width', 'Volume', 'MA Cross'],
+            datasets: [{
+                label: 'Feature Importance',
+                data: [0.35, 0.25, 0.20, 0.12, 0.08],
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.7)',
+                    'rgba(0, 123, 255, 0.7)',
+                    'rgba(255, 193, 7, 0.7)',
+                    'rgba(108, 117, 125, 0.7)',
+                    'rgba(23, 162, 184, 0.7)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    beginAtZero: true,
+                    max: 0.4
+                }
+            }
+        }
+    });
+
+    // Toggle between time periods for performance comparison chart
+    document.getElementById('weekCompare').addEventListener('click', function() {
+        setActiveCompareButton(this);
+        updateComparisonChart('week');
+    });
+    
+    document.getElementById('monthCompare').addEventListener('click', function() {
+        setActiveCompareButton(this);
+        updateComparisonChart('month');
+    });
+    
+    document.getElementById('allTimeCompare').addEventListener('click', function() {
+        setActiveCompareButton(this);
+        updateComparisonChart('allTime');
+    });
+    
+    function setActiveCompareButton(button) {
+        document.querySelectorAll('#weekCompare, #monthCompare, #allTimeCompare').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+    }
+    
+    function updateComparisonChart(period) {
+        let labels, data1, data2, data3, data4;
+        
+        if (period === 'week') {
+            labels = ['Apr 8', 'Apr 9', 'Apr 10', 'Apr 11', 'Apr 12', 'Apr 13', 'Apr 14', 'Apr 15'];
+            data1 = [0, 1.2, 1.8, 2.5, 3.2, 3.9, 4.2, 4.8];
+            data2 = [0, 0.8, 1.3, 1.7, 2.0, 2.3, 2.3, 2.3];
+            data3 = [0, 1.0, 1.5, 2.0, 2.2, 2.5, 2.8, 3.1];
+            data4 = [0, 0.5, 0.2, 0.0, -0.3, -0.5, -0.5, -0.5];
+        } else if (period === 'month') {
+            labels = ['Mar 15', 'Mar 20', 'Mar 25', 'Mar 30', 'Apr 5', 'Apr 10', 'Apr 15'];
+            data1 = [0, 2.5, 5.0, 7.2, 10.5, 12.8, 15.2];
+            data2 = [0, 1.8, 3.5, 5.2, 7.1, 8.5, 9.8];
+            data3 = [0, 2.2, 4.5, 6.8, 8.9, 10.5, 12.2];
+            data4 = [0, 1.5, 2.2, 1.8, 0.5, -1.2, -2.0];
+        } else {
+            labels = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
+            data1 = [0, 5.0, 12.5, 18.5, 25.0, 32.0];
+            data2 = [0, 3.5, 8.2, 12.5, 16.8, 22.0];
+            data3 = [0, 4.2, 10.0, 15.5, 20.0, 25.5];
+            data4 = [0, 2.5, 5.0, 3.2, 1.5, -0.5];
+        }
+        
+        perfCompChart.data.labels = labels;
+        perfCompChart.data.datasets[0].data = data1;
+        perfCompChart.data.datasets[1].data = data2;
+        perfCompChart.data.datasets[2].data = data3;
+        perfCompChart.data.datasets[3].data = data4;
+        perfCompChart.update();
+    }
+    
+    // Search functionality for models table
+    document.getElementById('modelSearch').addEventListener('keyup', function() {
+        const searchTerm = this.value.toLowerCase();
+        const table = document.getElementById('modelsTable');
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        
+        for (let i = 0; i < rows.length; i++) {
+            const modelName = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+            const modelType = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+            const pair = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+            
+            if (modelName.includes(searchTerm) || modelType.includes(searchTerm) || pair.includes(searchTerm)) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,1587 @@
+{% extends "layout.html" %}
+
+{% block title %}AITradeStrategist - Documentation{% endblock %}
+
+{% block page_title %}Documentation{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Documentation</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#gettingStarted" class="list-group-item list-group-item-action active" data-bs-toggle="pill">
+                    <i class="fas fa-rocket me-2"></i> Getting Started
+                </a>
+                <a href="#aiModels" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-brain me-2"></i> AI Models
+                </a>
+                <a href="#freqtradeIntegration" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-plug me-2"></i> Freqtrade Integration
+                </a>
+                <a href="#backtest" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-chart-line me-2"></i> Backtesting
+                </a>
+                <a href="#monteCarlo" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-dice me-2"></i> Monte Carlo Simulation
+                </a>
+                <a href="#alertSystem" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-bell me-2"></i> Alert System
+                </a>
+                <a href="#gpuAcceleration" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-microchip me-2"></i> GPU Acceleration
+                </a>
+                <a href="#api" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-code me-2"></i> API Reference
+                </a>
+                <a href="#faq" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-question-circle me-2"></i> FAQ
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-9">
+        <div class="tab-content">
+            <!-- Getting Started -->
+            <div class="tab-pane fade show active" id="gettingStarted">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Getting Started with AITradeStrategist</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>Welcome to AITradeStrategist</h5>
+                            <p>AITradeStrategist is an advanced cryptocurrency trading platform that leverages machine learning algorithms to optimize trading strategies. This guide will help you get started with the platform and understand its key features.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>System Requirements</h5>
+                            <ul>
+                                <li>CPU: 4+ cores recommended</li>
+                                <li>RAM: 8GB minimum, 16GB recommended</li>
+                                <li>GPU: Optional but recommended for faster AI model training (AMD RX6600 or equivalent)</li>
+                                <li>Storage: 20GB free space</li>
+                                <li>OS: Linux, Windows, or macOS</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Quick Start Guide</h5>
+                            <ol>
+                                <li>
+                                    <strong>Setup Environment</strong>
+                                    <p>Ensure your system meets the requirements above. For GPU acceleration, make sure you have the appropriate drivers installed.</p>
+                                </li>
+                                <li>
+                                    <strong>Configure API Connections</strong>
+                                    <p>Go to Settings &gt; API Connections to set up your Freqtrade integration and exchange API keys.</p>
+                                </li>
+                                <li>
+                                    <strong>Import Historical Data</strong>
+                                    <p>Navigate to the Backtest page to import historical trading data for training your AI models.</p>
+                                </li>
+                                <li>
+                                    <strong>Train Your First AI Model</strong>
+                                    <p>Go to the AI Models page and click "Train New Model" to create your first trading model.</p>
+                                </li>
+                                <li>
+                                    <strong>Run a Backtest</strong>
+                                    <p>Test your model against historical data to evaluate its performance before deploying.</p>
+                                </li>
+                                <li>
+                                    <strong>Deploy for Live Trading</strong>
+                                    <p>Once satisfied with your model's performance, deploy it for live trading through the Freqtrade integration.</p>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Key Features</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Feature</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>AI-Powered Models</td>
+                                            <td>Train and deploy machine learning models (LightGBM, XGBoost, Random Forest) for automated trading decisions.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GPU Acceleration</td>
+                                            <td>Utilize AMD GPU acceleration via DirectML for faster model training and inference.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Backtest Analysis</td>
+                                            <td>Test strategies against historical data to evaluate performance metrics.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Monte Carlo Simulation</td>
+                                            <td>Run probability simulations to assess risk and potential outcomes.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Freqtrade Integration</td>
+                                            <td>Seamless connection with Freqtrade trading bot for strategy deployment.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Alert System</td>
+                                            <td>Configure notifications via Email, Telegram, or SMS for important trading events.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> For more detailed information about each feature, please refer to the corresponding section in this documentation.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Models -->
+            <div class="tab-pane fade" id="aiModels">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">AI Models Documentation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>Understanding AI Models in Trading</h5>
+                            <p>AITradeStrategist uses various machine learning algorithms to analyze market data and make trading decisions. The platform primarily supports three types of models:</p>
+                            
+                            <div class="table-responsive mb-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Model Type</th>
+                                            <th>Strengths</th>
+                                            <th>Best Use Cases</th>
+                                            <th>GPU Support</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>LightGBM</td>
+                                            <td>Fast training, handles large datasets, good accuracy</td>
+                                            <td>General-purpose trading, high-frequency strategies</td>
+                                            <td>Yes (via DirectML)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>XGBoost</td>
+                                            <td>High accuracy, robust to overfitting</td>
+                                            <td>Complex pattern recognition, trend following</td>
+                                            <td>Yes</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Random Forest</td>
+                                            <td>Simple, stable, less prone to overfitting</td>
+                                            <td>Exploratory analysis, baseline models</td>
+                                            <td>No</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Training an AI Model</h5>
+                            <ol>
+                                <li>
+                                    <strong>Prepare Data</strong>
+                                    <p>Import backtest data or historical market data for the cryptocurrency pairs you want to trade.</p>
+                                </li>
+                                <li>
+                                    <strong>Select Model Type</strong>
+                                    <p>Choose the appropriate model type based on your trading strategy and requirements.</p>
+                                </li>
+                                <li>
+                                    <strong>Configure Parameters</strong>
+                                    <div class="alert alert-info mb-2">
+                                        <strong>Tip:</strong> For beginners, enable "Auto-optimize hyperparameters" to let the system find optimal settings.
+                                    </div>
+                                    <p>Key parameters to consider:</p>
+                                    <ul>
+                                        <li><strong>Feature Selection:</strong> Technical indicators used for prediction (RSI, MACD, Bollinger Bands, etc.)</li>
+                                        <li><strong>Timeframe:</strong> The time interval for each candlestick (1m, 5m, 15m, 1h, etc.)</li>
+                                        <li><strong>Training Period:</strong> Amount of historical data to use for training</li>
+                                        <li><strong>Hyperparameters:</strong> Model-specific settings that affect learning behavior</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Train the Model</strong>
+                                    <p>Start the training process. The system will automatically:</p>
+                                    <ul>
+                                        <li>Split data into training and validation sets</li>
+                                        <li>Preprocess and normalize features</li>
+                                        <li>Train the model with the selected algorithm</li>
+                                        <li>Perform cross-validation to ensure robustness</li>
+                                        <li>Evaluate performance metrics</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Review and Save</strong>
+                                    <p>Examine the model's performance metrics and save it if satisfactory.</p>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Model Evaluation Metrics</h5>
+                            <p>When assessing model performance, consider these key metrics:</p>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Description</th>
+                                            <th>Target Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Win Rate</td>
+                                            <td>Percentage of profitable trades</td>
+                                            <td>&gt; 60%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Profit Factor</td>
+                                            <td>Ratio of gross profits to gross losses</td>
+                                            <td>&gt; 1.5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sharpe Ratio</td>
+                                            <td>Risk-adjusted return measurement</td>
+                                            <td>&gt; 1.0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Drawdown</td>
+                                            <td>Maximum observed loss from a peak to a trough</td>
+                                            <td>&lt; 10%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Precision</td>
+                                            <td>Accuracy of positive predictions</td>
+                                            <td>&gt; 0.7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Recall</td>
+                                            <td>Ability to find all positive instances</td>
+                                            <td>&gt; 0.7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>F1 Score</td>
+                                            <td>Harmonic mean of precision and recall</td>
+                                            <td>&gt; 0.7</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Best Practices</h5>
+                            <ul>
+                                <li><strong>Avoid Overfitting:</strong> Use sufficient data and proper validation techniques</li>
+                                <li><strong>Regular Retraining:</strong> Update models periodically as market conditions change</li>
+                                <li><strong>Feature Engineering:</strong> Experiment with different technical indicators</li>
+                                <li><strong>Start Simple:</strong> Begin with straightforward models before adding complexity</li>
+                                <li><strong>Ensemble Methods:</strong> Consider using multiple models for more robust predictions</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i> 
+                            <strong>Important:</strong> While AI models can significantly improve trading performance, they are not infallible. Always monitor their performance and be prepared to intervene when necessary.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Freqtrade Integration -->
+            <div class="tab-pane fade" id="freqtradeIntegration">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Freqtrade Integration Guide</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>Introduction to Freqtrade Integration</h5>
+                            <p>AITradeStrategist integrates seamlessly with Freqtrade, an open-source cryptocurrency trading bot. This integration allows you to deploy AI-generated strategies directly to Freqtrade for automated trading.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Setup Process</h5>
+                            <ol>
+                                <li>
+                                    <strong>Install Freqtrade</strong>
+                                    <p>If you haven't already, install Freqtrade following their <a href="https://www.freqtrade.io/en/stable/installation/" target="_blank">official installation guide</a>.</p>
+                                </li>
+                                <li>
+                                    <strong>Configure Freqtrade API</strong>
+                                    <p>Enable the REST API in your Freqtrade configuration:</p>
+                                    <div class="bg-dark p-3 rounded mb-3">
+                                        <pre class="text-light mb-0"><code>"api_server": {
+    "enabled": true,
+    "listen_ip_address": "127.0.0.1",
+    "listen_port": 8080,
+    "verbosity": "info",
+    "enable_openapi": true,
+    "jwt_secret_key": "your-secret-key",
+    "CORS_origins": ["http://localhost:5000"],
+    "username": "your-username",
+    "password": "your-password"
+}</code></pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong>Connect AITradeStrategist to Freqtrade</strong>
+                                    <p>In AITradeStrategist, go to <strong>Settings &gt; API Connections</strong> and configure the Freqtrade API connection:</p>
+                                    <ul>
+                                        <li><strong>API URL:</strong> The URL where your Freqtrade API is running (e.g., http://localhost:8080)</li>
+                                        <li><strong>Username:</strong> Your Freqtrade API username</li>
+                                        <li><strong>Password:</strong> Your Freqtrade API password</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Test Connection</strong>
+                                    <p>Click "Test Connection" to verify that AITradeStrategist can communicate with Freqtrade.</p>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Using AI-Generated Strategies with Freqtrade</h5>
+                            <ol>
+                                <li>
+                                    <strong>Generate a Strategy</strong>
+                                    <p>After training an AI model, navigate to the AI Models page and click "Generate Strategy" for your selected model.</p>
+                                </li>
+                                <li>
+                                    <strong>Review the Strategy</strong>
+                                    <p>The system will generate a Python file compatible with Freqtrade's strategy format. Review the code to ensure it meets your requirements.</p>
+                                </li>
+                                <li>
+                                    <strong>Deploy the Strategy</strong>
+                                    <p>Two deployment options are available:</p>
+                                    <ul>
+                                        <li><strong>Manual Deployment:</strong> Download the strategy file and place it in your Freqtrade's "user_data/strategies" directory.</li>
+                                        <li><strong>Automatic Deployment:</strong> Use the "Deploy to Freqtrade" button to automatically transfer the strategy to your configured Freqtrade instance.</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Configure Freqtrade to Use the Strategy</strong>
+                                    <p>Update your Freqtrade configuration to use the new strategy:</p>
+                                    <div class="bg-dark p-3 rounded mb-3">
+                                        <pre class="text-light mb-0"><code>"strategy": "AIGenerated_BTC_LightGBM_v2",
+"strategy_path": "user_data/strategies/"</code></pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong>Start Trading</strong>
+                                    <p>Start Freqtrade with your new strategy, or use the "Start Bot" button in AITradeStrategist's Freqtrade control panel.</p>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Monitoring and Control</h5>
+                            <p>Once integrated, you can manage your Freqtrade bot directly from AITradeStrategist:</p>
+                            <ul>
+                                <li><strong>Dashboard:</strong> View current trades, profits, and performance metrics</li>
+                                <li><strong>Trade History:</strong> Access detailed records of all trades executed by Freqtrade</li>
+                                <li><strong>Remote Controls:</strong> Start/stop the bot, force buy/sell, and adjust parameters</li>
+                                <li><strong>Alerts:</strong> Configure notifications for important trading events</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Data Synchronization</h5>
+                            <p>AITradeStrategist automatically synchronizes data with Freqtrade, including:</p>
+                            <ul>
+                                <li><strong>Trading Pairs:</strong> Available markets and trading pairs</li>
+                                <li><strong>Performance Metrics:</strong> Real-time and historical performance data</li>
+                                <li><strong>Trade Data:</strong> Detailed information about executed trades</li>
+                                <li><strong>Balance Information:</strong> Current account balance and allocation</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i> 
+                            <strong>Important:</strong> Always test your AI-generated strategies thoroughly in backtesting and dry-run mode before using them for live trading.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Backtesting -->
+            <div class="tab-pane fade" id="backtest">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Backtesting Documentation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>Introduction to Backtesting</h5>
+                            <p>Backtesting is the process of testing a trading strategy against historical market data to evaluate its potential effectiveness. AITradeStrategist provides comprehensive backtesting capabilities to help you assess and refine AI-powered trading strategies before deploying them in live markets.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Backtesting Process</h5>
+                            <ol>
+                                <li>
+                                    <strong>Data Preparation</strong>
+                                    <p>Begin by importing historical market data for the cryptocurrency pairs you want to test. You can either:</p>
+                                    <ul>
+                                        <li><strong>Import from Freqtrade:</strong> Use existing backtest data from your Freqtrade installation</li>
+                                        <li><strong>Download New Data:</strong> Fetch fresh historical data for specific pairs and timeframes</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Strategy Selection</strong>
+                                    <p>Choose the trading strategy to test. Options include:</p>
+                                    <ul>
+                                        <li><strong>AI-Generated Strategies:</strong> Strategies created from your trained AI models</li>
+                                        <li><strong>Custom Strategies:</strong> Manually created trading strategies</li>
+                                        <li><strong>Template Strategies:</strong> Pre-configured strategies for comparison</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Configure Parameters</strong>
+                                    <p>Set the parameters for your backtest:</p>
+                                    <ul>
+                                        <li><strong>Time Range:</strong> The historical period to analyze</li>
+                                        <li><strong>Starting Capital:</strong> Initial investment amount</li>
+                                        <li><strong>Fee Structure:</strong> Trading fees to simulate</li>
+                                        <li><strong>Stake Amount:</strong> Amount to invest per trade</li>
+                                        <li><strong>Max Open Trades:</strong> Maximum number of simultaneous positions</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Run Backtest</strong>
+                                    <p>Execute the backtest. The system will simulate how your strategy would have performed during the selected historical period.</p>
+                                </li>
+                                <li>
+                                    <strong>Analyze Results</strong>
+                                    <p>Review the comprehensive results provided by the system:</p>
+                                    <ul>
+                                        <li><strong>Performance Metrics:</strong> Profit, win rate, Sharpe ratio, etc.</li>
+                                        <li><strong>Trade List:</strong> Detailed view of each simulated trade</li>
+                                        <li><strong>Equity Curve:</strong> Visualization of capital growth over time</li>
+                                        <li><strong>Drawdown Analysis:</strong> Assessment of potential losses</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Importing Backtest Data</h5>
+                            <p>To import existing backtest data from Freqtrade:</p>
+                            <ol>
+                                <li>Navigate to the Backtest page</li>
+                                <li>Click "Import from Freqtrade"</li>
+                                <li>Select the directory containing your Freqtrade backtest results</li>
+                                <li>Choose the specific backtest runs to import</li>
+                                <li>Click "Import Selected Data"</li>
+                            </ol>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i> 
+                                <strong>Tip:</strong> Imported backtest data can be used both for analysis and for training AI models.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Key Backtest Metrics</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Description</th>
+                                            <th>Interpretation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total Profit</td>
+                                            <td>Overall profit/loss as a percentage</td>
+                                            <td>Higher is better</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Win Rate</td>
+                                            <td>Percentage of profitable trades</td>
+                                            <td>&gt;50% is generally desirable</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Drawdown</td>
+                                            <td>Largest peak-to-trough decline</td>
+                                            <td>Lower is better</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sharpe Ratio</td>
+                                            <td>Risk-adjusted return measurement</td>
+                                            <td>&gt;1 is good, &gt;2 is excellent</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Profit Factor</td>
+                                            <td>Gross profit divided by gross loss</td>
+                                            <td>&gt;1.5 indicates a potentially viable strategy</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Average Trade Duration</td>
+                                            <td>Average time positions were held</td>
+                                            <td>Depends on strategy type</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Expectancy</td>
+                                            <td>Average profit per trade</td>
+                                            <td>Positive values indicate profitable strategy</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Using Backtest Results for AI Training</h5>
+                            <p>AITradeStrategist uniquely allows you to leverage backtest results to train AI models:</p>
+                            <ol>
+                                <li>Import backtest data as described above</li>
+                                <li>Navigate to the AI Models page</li>
+                                <li>Click "Train New Model"</li>
+                                <li>Select "Use Backtest Data" as the data source</li>
+                                <li>Choose the imported backtest results to use for training</li>
+                                <li>Configure model parameters and begin training</li>
+                            </ol>
+                            <p>This approach allows the AI to learn from the successful patterns identified in your backtest strategies.</p>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i> 
+                            <strong>Important:</strong> Past performance in backtesting does not guarantee future results. Always use backtesting as one of multiple evaluation tools, and be aware of potential overfitting issues.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Monte Carlo Simulation -->
+            <div class="tab-pane fade" id="monteCarlo">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Monte Carlo Simulation Guide</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>Introduction to Monte Carlo Simulation</h5>
+                            <p>Monte Carlo simulation is a powerful statistical technique that uses repeated random sampling to obtain a range of possible outcomes for a given scenario. In the context of trading, it helps estimate the probability of different results by running many simulations with randomized variables.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Why Use Monte Carlo Simulation?</h5>
+                            <p>Monte Carlo simulations provide several key benefits for crypto traders:</p>
+                            <ul>
+                                <li><strong>Risk Assessment:</strong> Better understand potential downside risks and maximum drawdowns</li>
+                                <li><strong>Probability Analysis:</strong> Estimate the likelihood of achieving specific profit targets</li>
+                                <li><strong>Robustness Testing:</strong> Evaluate how strategies perform under different market conditions</li>
+                                <li><strong>Position Sizing:</strong> Optimize trade size based on risk tolerance</li>
+                                <li><strong>Expectation Management:</strong> Set realistic expectations for strategy performance</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Running a Monte Carlo Simulation</h5>
+                            <ol>
+                                <li>
+                                    <strong>Navigate to the Monte Carlo Page</strong>
+                                    <p>Access the Monte Carlo simulator from the main navigation menu.</p>
+                                </li>
+                                <li>
+                                    <strong>Select a Model</strong>
+                                    <p>Choose one of your trained AI models for simulation. The system will use the model's historical performance metrics as a baseline.</p>
+                                </li>
+                                <li>
+                                    <strong>Configure Parameters</strong>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Parameter</th>
+                                                    <th>Description</th>
+                                                    <th>Recommended Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Number of Simulations</td>
+                                                    <td>How many random simulation runs to perform</td>
+                                                    <td>1,000 - 10,000</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Initial Capital</td>
+                                                    <td>Starting investment amount</td>
+                                                    <td>Your actual trading capital</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Risk Per Trade</td>
+                                                    <td>Percentage of capital risked on each trade</td>
+                                                    <td>1% - 2%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Trading Days</td>
+                                                    <td>Number of days to simulate</td>
+                                                    <td>30, 90, or 365 days</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Trades Per Day</td>
+                                                    <td>Average number of trading opportunities</td>
+                                                    <td>Based on your strategy frequency</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Win Rate</td>
+                                                    <td>Baseline probability of profitable trades</td>
+                                                    <td>Use model's historical win rate</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Win Rate Variance</td>
+                                                    <td>Random fluctuation in win rate</td>
+                                                    <td>5% - 10%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Risk/Reward Ratio</td>
+                                                    <td>Ratio of potential profit to potential loss</td>
+                                                    <td>Use model's historical ratio</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Consider Fees</td>
+                                                    <td>Include trading fees in calculations</td>
+                                                    <td>Enabled</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong>Run Simulation</strong>
+                                    <p>Click "Run Simulation" to start the Monte Carlo process. The system will execute the configured number of randomized trading scenarios.</p>
+                                </li>
+                                <li>
+                                    <strong>Analyze Results</strong>
+                                    <p>Review the comprehensive results provided:</p>
+                                    <ul>
+                                        <li><strong>Equity Curves:</strong> Visualize the range of possible performance paths</li>
+                                        <li><strong>Probability Distribution:</strong> See the distribution of final outcomes</li>
+                                        <li><strong>Risk Metrics:</strong> Analyze drawdown probabilities and other risk factors</li>
+                                        <li><strong>AI Analysis:</strong> Automated interpretation of results with optimization suggestions</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Interpreting Monte Carlo Results</h5>
+                            <p>Key metrics to focus on from your simulation results:</p>
+                            <ul>
+                                <li>
+                                    <strong>Expected Return Range</strong>
+                                    <p>The range between the 25th and 75th percentiles represents the most likely outcome range.</p>
+                                </li>
+                                <li>
+                                    <strong>Maximum Drawdown Probability</strong>
+                                    <p>The likelihood of experiencing different levels of drawdown helps with risk management.</p>
+                                </li>
+                                <li>
+                                    <strong>Win Rate Sensitivity</strong>
+                                    <p>Understanding how changes in win rate affect overall profitability helps identify critical performance thresholds.</p>
+                                </li>
+                                <li>
+                                    <strong>Profit Target Probability</strong>
+                                    <p>The likelihood of reaching specific profit goals within your simulation timeframe.</p>
+                                </li>
+                                <li>
+                                    <strong>Ruin Probability</strong>
+                                    <p>The chance of losing a significant portion of your capital (e.g., 50% or more).</p>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Using Results to Optimize Trading</h5>
+                            <p>Monte Carlo results can inform several key trading decisions:</p>
+                            <ul>
+                                <li><strong>Position Sizing:</strong> Adjust your risk per trade based on drawdown probabilities</li>
+                                <li><strong>Strategy Selection:</strong> Compare different models to find the most robust options</li>
+                                <li><strong>Capital Allocation:</strong> Determine appropriate capital allocation across different strategies</li>
+                                <li><strong>Stop-Loss Levels:</strong> Set strategic stop-loss levels based on expected price movement ranges</li>
+                                <li><strong>Profit Targets:</strong> Establish realistic profit expectations and targets</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> 
+                            <strong>Pro Tip:</strong> Run multiple simulations with different parameter sets to stress-test your strategies under various market conditions. This helps identify robust strategies that perform well across a range of scenarios.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alert System -->
+            <div class="tab-pane fade" id="alertSystem">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Alert System Documentation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>Introduction to the Alert System</h5>
+                            <p>AITradeStrategist includes a powerful notification system that keeps you informed about trading activities, system events, and market conditions. The alert system can send notifications through multiple channels: Email, Telegram, and SMS.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Setting Up Notification Channels</h5>
+                            
+                            <h6 class="mt-3">Email Notifications</h6>
+                            <ol>
+                                <li>Navigate to <strong>Settings &gt; Notification Settings</strong></li>
+                                <li>Enable "Email Notifications"</li>
+                                <li>Enter your email address</li>
+                                <li>Select the alert types you want to receive via email</li>
+                                <li>Save your settings</li>
+                            </ol>
+                            
+                            <h6 class="mt-3">Telegram Notifications</h6>
+                            <ol>
+                                <li>Create a Telegram bot using <a href="https://t.me/BotFather" target="_blank">BotFather</a></li>
+                                <li>Get your bot token and chat ID</li>
+                                <li>In AITradeStrategist, navigate to <strong>Settings &gt; Notification Settings</strong></li>
+                                <li>Enable "Telegram Notifications"</li>
+                                <li>Enter your Telegram Bot Token and Chat ID</li>
+                                <li>Click "Test Telegram" to verify the connection</li>
+                                <li>Save your settings</li>
+                            </ol>
+                            
+                            <h6 class="mt-3">SMS Notifications (via Twilio)</h6>
+                            <ol>
+                                <li>Create a Twilio account at <a href="https://www.twilio.com" target="_blank">twilio.com</a></li>
+                                <li>Get your Account SID, Auth Token, and Twilio phone number</li>
+                                <li>In AITradeStrategist, navigate to <strong>Settings &gt; Notification Settings</strong></li>
+                                <li>Enable "SMS Notifications"</li>
+                                <li>Enter your Twilio Account SID, Auth Token, and phone numbers</li>
+                                <li>Click "Test SMS" to verify the connection</li>
+                                <li>Save your settings</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Creating Alert Rules</h5>
+                            <p>To create custom alert rules:</p>
+                            <ol>
+                                <li>Go to the <strong>Monitoring &amp; Alerts</strong> page</li>
+                                <li>Click "New Alert"</li>
+                                <li>Select the alert type:
+                                    <ul>
+                                        <li><strong>Price Alert:</strong> Notifications when price crosses specified levels</li>
+                                        <li><strong>Profit/Loss Alert:</strong> Alerts based on P&L thresholds</li>
+                                        <li><strong>System Alert:</strong> Notifications for system resource usage (CPU, memory, etc.)</li>
+                                        <li><strong>Trade Count Alert:</strong> Alerts when trade frequency exceeds thresholds</li>
+                                    </ul>
+                                </li>
+                                <li>Configure the specific parameters for your selected alert type</li>
+                                <li>Choose which notification channels to use for this alert</li>
+                                <li>Set the alert priority (High, Medium, Low)</li>
+                                <li>Save the alert rule</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Alert Types</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Alert Category</th>
+                                            <th>Description</th>
+                                            <th>Use Case</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Price Alerts</td>
+                                            <td>Notifications when price crosses above/below specified levels</td>
+                                            <td>Identifying entry/exit opportunities, monitoring key support/resistance levels</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Trade Alerts</td>
+                                            <td>Notifications about trade entries, exits, and status changes</td>
+                                            <td>Staying informed about bot trading activity in real-time</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Profit/Loss Alerts</td>
+                                            <td>Notifications when P&L reaches specified thresholds</td>
+                                            <td>Managing risk, celebrating wins, addressing losses promptly</td>
+                                        </tr>
+                                        <tr>
+                                            <td>System Alerts</td>
+                                            <td>Notifications about system resource usage and technical issues</td>
+                                            <td>Ensuring system stability and addressing technical problems</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Model Alerts</td>
+                                            <td>Notifications about AI model performance and retraining opportunities</td>
+                                            <td>Maintaining optimal model performance</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Managing Alerts</h5>
+                            <p>The Monitoring & Alerts page provides tools for managing your alerts:</p>
+                            <ul>
+                                <li><strong>Active Alerts:</strong> View all currently active alert rules</li>
+                                <li><strong>Alert History:</strong> Review past alert notifications</li>
+                                <li><strong>Edit/Delete:</strong> Modify or remove existing alert rules</li>
+                                <li><strong>Enable/Disable:</strong> Temporarily activate or deactivate alerts</li>
+                                <li><strong>Test:</strong> Manually trigger alerts to verify notification delivery</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Best Practices</h5>
+                            <ul>
+                                <li><strong>Prioritize Alerts:</strong> Use high-priority channels (like SMS) only for critical notifications</li>
+                                <li><strong>Group Similar Alerts:</strong> Avoid alert fatigue by combining related notifications</li>
+                                <li><strong>Set Reasonable Thresholds:</strong> Ensure alert thresholds are not too sensitive</li>
+                                <li><strong>Test Regularly:</strong> Periodically verify that all notification channels are working</li>
+                                <li><strong>Use Templates:</strong> Create alert templates for common scenarios to save time</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> 
+                            <strong>Note:</strong> Different notification channels have different delivery speeds. SMS is typically fastest, followed by Telegram, then Email. Consider this when setting up time-sensitive alerts.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GPU Acceleration -->
+            <div class="tab-pane fade" id="gpuAcceleration">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">GPU Acceleration Documentation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>Introduction to GPU Acceleration</h5>
+                            <p>AITradeStrategist leverages GPU acceleration to significantly speed up AI model training and inference. This feature is particularly beneficial for complex models and large datasets, providing up to 10x faster performance compared to CPU-only processing.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Supported Hardware</h5>
+                            <p>The platform is optimized for AMD GPUs through DirectML integration. Supported hardware includes:</p>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>GPU Series</th>
+                                            <th>Supported Models</th>
+                                            <th>Minimum VRAM</th>
+                                            <th>Recommended VRAM</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>AMD Radeon RX 6000 Series</td>
+                                            <td>RX 6600, RX 6700 XT, RX 6800, RX 6900 XT</td>
+                                            <td>8 GB</td>
+                                            <td>12+ GB</td>
+                                        </tr>
+                                        <tr>
+                                            <td>AMD Radeon RX 5000 Series</td>
+                                            <td>RX 5700 XT, RX 5700, RX 5600 XT</td>
+                                            <td>6 GB</td>
+                                            <td>8+ GB</td>
+                                        </tr>
+                                        <tr>
+                                            <td>AMD Radeon VII</td>
+                                            <td>All variants</td>
+                                            <td>16 GB</td>
+                                            <td>16 GB</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="alert alert-info mb-3">
+                                <i class="fas fa-info-circle me-2"></i> NVIDIA GPUs are not currently supported natively, but may work through DirectML with reduced performance.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Setup and Configuration</h5>
+                            
+                            <h6 class="mt-3">Driver Requirements</h6>
+                            <p>To use GPU acceleration, ensure you have the following:</p>
+                            <ul>
+                                <li><strong>AMD Drivers:</strong> Adrenalin 22.5.1 or newer</li>
+                                <li><strong>DirectML:</strong> Automatically installed with AITradeStrategist</li>
+                                <li><strong>OS Support:</strong> Windows 10/11, Linux with ROCm support</li>
+                            </ul>
+                            
+                            <h6 class="mt-3">Enabling GPU Acceleration</h6>
+                            <ol>
+                                <li>Go to <strong>Settings &gt; System</strong></li>
+                                <li>Under "GPU Acceleration," ensure "Enable GPU Acceleration" is checked</li>
+                                <li>Optionally configure memory limits to prevent out-of-memory errors</li>
+                                <li>Save your settings</li>
+                            </ol>
+                            
+                            <h6 class="mt-3">Memory Management</h6>
+                            <p>Proper GPU memory management is essential for stable operation:</p>
+                            <ul>
+                                <li><strong>Memory Limit:</strong> Set a maximum VRAM usage (recommended: 75% of available VRAM)</li>
+                                <li><strong>Batch Size Control:</strong> Adjust batch sizes when training large models</li>
+                                <li><strong>Model Complexity:</strong> Consider reducing model complexity if VRAM is limited</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Accelerated Features</h5>
+                            <p>The following features benefit from GPU acceleration:</p>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Feature</th>
+                                            <th>Acceleration Benefit</th>
+                                            <th>VRAM Usage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>LightGBM Model Training</td>
+                                            <td>5-10x faster training time</td>
+                                            <td>Medium-High</td>
+                                        </tr>
+                                        <tr>
+                                            <td>XGBoost Model Training</td>
+                                            <td>3-7x faster training time</td>
+                                            <td>Medium</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Model Prediction/Inference</td>
+                                            <td>2-4x faster prediction time</td>
+                                            <td>Low</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Feature Engineering</td>
+                                            <td>3-5x faster preprocessing</td>
+                                            <td>Medium</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Monte Carlo Simulation</td>
+                                            <td>5-8x faster simulation time</td>
+                                            <td>Low-Medium</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Hyperparameter Optimization</td>
+                                            <td>4-6x faster optimization</td>
+                                            <td>High</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Performance Optimization</h5>
+                            <p>To get the best performance from GPU acceleration:</p>
+                            <ul>
+                                <li><strong>Driver Updates:</strong> Keep GPU drivers updated to the latest version</li>
+                                <li><strong>Background Applications:</strong> Close other GPU-intensive applications when training models</li>
+                                <li><strong>Cooling:</strong> Ensure adequate cooling for sustained GPU workloads</li>
+                                <li><strong>Data Preprocessing:</strong> Perform data preprocessing on CPU before transferring to GPU</li>
+                                <li><strong>Batch Processing:</strong> Use appropriate batch sizes for your GPU's VRAM capacity</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Troubleshooting</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Issue</th>
+                                            <th>Possible Cause</th>
+                                            <th>Solution</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Out of Memory Errors</td>
+                                            <td>Insufficient VRAM for operation</td>
+                                            <td>Reduce batch size, limit VRAM usage, or simplify model</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GPU Not Detected</td>
+                                            <td>Driver issues or unsupported hardware</td>
+                                            <td>Update drivers, check hardware compatibility</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Poor Performance</td>
+                                            <td>Suboptimal configuration</td>
+                                            <td>Adjust batch sizes, check for other GPU-intensive applications</td>
+                                        </tr>
+                                        <tr>
+                                            <td>System Crashes</td>
+                                            <td>GPU overheating or unstable drivers</td>
+                                            <td>Improve cooling, update/rollback drivers</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Training Fails to Start</td>
+                                            <td>Missing dependencies</td>
+                                            <td>Check system logs, verify all dependencies are installed</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i> 
+                            <strong>Important:</strong> If you experience issues with GPU acceleration, you can always disable it in Settings and fall back to CPU processing, which will work reliably on all systems.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Reference -->
+            <div class="tab-pane fade" id="api">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">API Reference</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>Introduction to the API</h5>
+                            <p>AITradeStrategist provides a comprehensive REST API that allows you to programmatically interact with the platform. This API enables integration with external systems, automation of tasks, and development of custom extensions.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Authentication</h5>
+                            <p>All API requests require authentication using API keys.</p>
+                            <h6 class="mt-3">Generating API Keys</h6>
+                            <ol>
+                                <li>Go to <strong>Settings &gt; API Access</strong></li>
+                                <li>Click "Generate New API Key"</li>
+                                <li>Give your key a descriptive name</li>
+                                <li>Set appropriate permissions</li>
+                                <li>Save and securely store the generated key</li>
+                            </ol>
+                            
+                            <h6 class="mt-3">Using API Keys</h6>
+                            <p>Include your API key in the request header:</p>
+                            <div class="bg-dark p-3 rounded mb-3">
+                                <pre class="text-light mb-0"><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>API Endpoints</h5>
+                            
+                            <h6 class="mt-3">Models API</h6>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Endpoint</th>
+                                            <th>Method</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>/api/models</code></td>
+                                            <td>GET</td>
+                                            <td>List all AI models</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/models/{id}</code></td>
+                                            <td>GET</td>
+                                            <td>Get details of a specific model</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/models</code></td>
+                                            <td>POST</td>
+                                            <td>Create/train a new model</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/models/{id}</code></td>
+                                            <td>PUT</td>
+                                            <td>Update model properties</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/models/{id}</code></td>
+                                            <td>DELETE</td>
+                                            <td>Delete a model</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/models/{id}/activate</code></td>
+                                            <td>POST</td>
+                                            <td>Activate a model</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/models/{id}/generate_strategy</code></td>
+                                            <td>POST</td>
+                                            <td>Generate strategy code from model</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <h6 class="mt-3">Backtest API</h6>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Endpoint</th>
+                                            <th>Method</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>/api/backtest/import</code></td>
+                                            <td>POST</td>
+                                            <td>Import backtest data</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/backtest/data</code></td>
+                                            <td>GET</td>
+                                            <td>Get imported backtest data</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/backtest/strategies</code></td>
+                                            <td>GET</td>
+                                            <td>List available strategies</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/backtest/run</code></td>
+                                            <td>POST</td>
+                                            <td>Run a backtest</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/backtest/results/{id}</code></td>
+                                            <td>GET</td>
+                                            <td>Get backtest results</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <h6 class="mt-3">Monte Carlo API</h6>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Endpoint</th>
+                                            <th>Method</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>/api/monte_carlo/run</code></td>
+                                            <td>POST</td>
+                                            <td>Run Monte Carlo simulation</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/monte_carlo/results/{id}</code></td>
+                                            <td>GET</td>
+                                            <td>Get simulation results</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <h6 class="mt-3">Trading & Performance API</h6>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Endpoint</th>
+                                            <th>Method</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>/api/stats/summary</code></td>
+                                            <td>GET</td>
+                                            <td>Get performance summary</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/trades/recent</code></td>
+                                            <td>GET</td>
+                                            <td>Get recent trades</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/stats/pairs</code></td>
+                                            <td>GET</td>
+                                            <td>Get trading pair performance</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <h6 class="mt-3">System API</h6>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Endpoint</th>
+                                            <th>Method</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>/api/system/status</code></td>
+                                            <td>GET</td>
+                                            <td>Get system status</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/system/gpu</code></td>
+                                            <td>GET</td>
+                                            <td>Get GPU information</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/api/system/logs</code></td>
+                                            <td>GET</td>
+                                            <td>Get system logs</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>API Usage Examples</h5>
+                            
+                            <h6 class="mt-3">Example: Fetching Models</h6>
+                            <div class="bg-dark p-3 rounded mb-3">
+                                <pre class="text-light mb-0"><code>curl -X GET "http://localhost:5000/api/models" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"</code></pre>
+                            </div>
+                            
+                            <h6 class="mt-3">Example: Running a Monte Carlo Simulation</h6>
+                            <div class="bg-dark p-3 rounded mb-3">
+                                <pre class="text-light mb-0"><code>curl -X POST "http://localhost:5000/api/monte_carlo/run" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": 1,
+    "simulations": 1000,
+    "initial_capital": 10000,
+    "risk_per_trade": 1.0,
+    "trading_days": 30,
+    "trades_per_day": 3,
+    "win_rate": 65.0,
+    "win_rate_variance": 5.0,
+    "risk_reward_ratio": 1.5,
+    "consider_fees": true
+  }'</code></pre>
+                            </div>
+                            
+                            <h6 class="mt-3">Example: Training a New Model</h6>
+                            <div class="bg-dark p-3 rounded mb-3">
+                                <pre class="text-light mb-0"><code>curl -X POST "http://localhost:5000/api/models" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_name": "BTC-LightGBM-v1",
+    "model_type": "lightgbm",
+    "pair": "BTC/USDT",
+    "timeframe": "1h",
+    "training_period": "6m",
+    "use_gpu": true,
+    "auto_optimize": true
+  }'</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Rate Limits</h5>
+                            <p>To ensure system stability, API requests are subject to rate limiting:</p>
+                            <ul>
+                                <li><strong>Standard Endpoints:</strong> 60 requests per minute</li>
+                                <li><strong>Resource-Intensive Endpoints:</strong> 10 requests per minute</li>
+                                <li><strong>Training/Simulation Endpoints:</strong> 2 requests per minute</li>
+                            </ul>
+                            <p>Rate limit information is provided in response headers:</p>
+                            <ul>
+                                <li><code>X-RateLimit-Limit</code>: Total allowed requests per time window</li>
+                                <li><code>X-RateLimit-Remaining</code>: Remaining requests in current window</li>
+                                <li><code>X-RateLimit-Reset</code>: Time (UTC timestamp) when limit resets</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> 
+                            <strong>Note:</strong> This documentation provides a high-level overview of the API. For detailed parameter information and response formats, refer to the complete API specification available at <code>/api/docs</code>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQ -->
+            <div class="tab-pane fade" id="faq">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Frequently Asked Questions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="accordion" id="faqAccordion">
+                                <!-- General Questions -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingGeneral">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGeneral" aria-expanded="true" aria-controls="collapseGeneral">
+                                            General Questions
+                                        </button>
+                                    </h2>
+                                    <div id="collapseGeneral" class="accordion-collapse collapse show" aria-labelledby="headingGeneral" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <h6>What is AITradeStrategist?</h6>
+                                                <p>AITradeStrategist is an advanced cryptocurrency trading platform that leverages machine learning algorithms to optimize trading strategies. It integrates with Freqtrade for execution and provides tools for backtesting, model training, and performance monitoring.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Do I need coding experience to use AITradeStrategist?</h6>
+                                                <p>No, the platform is designed with a user-friendly interface that doesn't require coding knowledge. However, having some understanding of trading concepts and basic machine learning principles will be helpful.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Is AITradeStrategist suitable for beginners?</h6>
+                                                <p>While beginners can use the platform, it's recommended to have some experience with cryptocurrency trading. The platform includes educational resources to help new users get started.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>How secure is my data?</h6>
+                                                <p>AITradeStrategist employs industry-standard security practices to protect your data. API keys are encrypted, and the platform doesn't store your exchange credentials unless explicitly configured to do so.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- AI Models -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingAI">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAI" aria-expanded="false" aria-controls="collapseAI">
+                                            AI Models
+                                        </button>
+                                    </h2>
+                                    <div id="collapseAI" class="accordion-collapse collapse" aria-labelledby="headingAI" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <h6>Which AI algorithms does the platform use?</h6>
+                                                <p>AITradeStrategist primarily uses gradient boosting algorithms like LightGBM and XGBoost, as well as Random Forest. These algorithms are well-suited for time series prediction and pattern recognition in financial data.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>How often should I retrain my models?</h6>
+                                                <p>It depends on market conditions, but generally, retraining every 2-4 weeks is recommended. The platform can also be configured to automatically suggest retraining when model performance degrades.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>What's the difference between LightGBM and XGBoost?</h6>
+                                                <p>Both are gradient boosting frameworks, but LightGBM typically trains faster and handles large datasets more efficiently. XGBoost may provide better accuracy in some cases. The platform allows you to compare both algorithms for your specific trading data.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Can I import my own models?</h6>
+                                                <p>Yes, AITradeStrategist supports importing externally trained models that are compatible with its framework. This is an advanced feature that requires some technical knowledge.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Freqtrade Integration -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingFreqtrade">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFreqtrade" aria-expanded="false" aria-controls="collapseFreqtrade">
+                                            Freqtrade Integration
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFreqtrade" class="accordion-collapse collapse" aria-labelledby="headingFreqtrade" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <h6>Do I need to install Freqtrade separately?</h6>
+                                                <p>Yes, Freqtrade needs to be installed separately. AITradeStrategist connects to your existing Freqtrade installation via its API.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Which version of Freqtrade is supported?</h6>
+                                                <p>AITradeStrategist supports Freqtrade version 2022.4 and newer. It's recommended to use the latest stable version of Freqtrade for optimal compatibility.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Can I control multiple Freqtrade instances?</h6>
+                                                <p>Yes, you can configure connections to multiple Freqtrade instances, allowing you to manage different strategies across various accounts or exchanges.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Does AITradeStrategist modify my Freqtrade configuration?</h6>
+                                                <p>Only if you explicitly allow it to. By default, it only reads data from Freqtrade. If you choose to deploy strategies, it will create strategy files in your Freqtrade directory.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- GPU Acceleration -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingGPU">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGPU" aria-expanded="false" aria-controls="collapseGPU">
+                                            GPU Acceleration
+                                        </button>
+                                    </h2>
+                                    <div id="collapseGPU" class="accordion-collapse collapse" aria-labelledby="headingGPU" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <h6>Is a GPU required to use AITradeStrategist?</h6>
+                                                <p>No, a GPU is optional. All features will work with CPU-only processing, but certain operations like model training will be significantly faster with GPU acceleration.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Why does AITradeStrategist focus on AMD GPUs?</h6>
+                                                <p>The platform is optimized for AMD GPUs through DirectML integration, providing better performance for these cards. NVIDIA GPUs may work with reduced performance through DirectML compatibility.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>How much VRAM do I need?</h6>
+                                                <p>For basic models, 4GB VRAM is sufficient. For more complex models or larger datasets, 8GB or more is recommended. The platform includes memory management features to work within your GPU's limitations.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>I'm getting GPU out-of-memory errors. What should I do?</h6>
+                                                <p>Try reducing batch sizes, limiting VRAM usage in settings, or simplifying your model. If problems persist, you can disable GPU acceleration and use CPU processing instead.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Troubleshooting -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTrouble">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTrouble" aria-expanded="false" aria-controls="collapseTrouble">
+                                            Troubleshooting
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTrouble" class="accordion-collapse collapse" aria-labelledby="headingTrouble" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <h6>The application won't start. What should I check?</h6>
+                                                <p>Verify that all dependencies are installed, check system logs for errors, ensure the database is properly configured, and confirm your hardware meets the minimum requirements.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Model training fails with errors. How can I fix this?</h6>
+                                                <p>Common causes include insufficient memory, missing dependencies, or data format issues. Check the system logs for specific error messages. Try reducing model complexity or disabling GPU acceleration to troubleshoot.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Can't connect to Freqtrade. What might be wrong?</h6>
+                                                <p>Verify that your Freqtrade instance is running with API enabled, check network connectivity, ensure API credentials are correct, and confirm that there are no firewall restrictions blocking the connection.</p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6>Where can I find detailed error logs?</h6>
+                                                <p>System logs are available in the Settings > Logs section of the application. For more detailed debugging, check the application log files in the logs directory of your installation.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5>Still Have Questions?</h5>
+                            <p>If you couldn't find the answer to your question, try these resources:</p>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-book-open fa-3x mb-3 text-primary"></i>
+                                            <h5>Documentation</h5>
+                                            <p>Check our detailed documentation for in-depth guides and tutorials.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                                            <h5>Community Forum</h5>
+                                            <p>Join our community forum to connect with other users and share experiences.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-envelope fa-3x mb-3 text-primary"></i>
+                                            <h5>Support Email</h5>
+                                            <p>Contact our technical support team directly for personalized assistance.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    
+    // Handle navigation between tabs when clicking links
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get URL hash and activate corresponding tab if present
+        let hash = window.location.hash;
+        if (hash) {
+            let tab = document.querySelector('a[href="' + hash + '"]');
+            if (tab) {
+                let bsTab = new bootstrap.Tab(tab);
+                bsTab.show();
+            }
+        }
+        
+        // Update URL hash when changing tabs
+        let tabLinks = document.querySelectorAll('.list-group-item-action[data-bs-toggle="pill"]');
+        tabLinks.forEach(function(tabLink) {
+            tabLink.addEventListener('shown.bs.tab', function (e) {
+                window.location.hash = e.target.getAttribute('href');
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,150 @@
+/* Custom CSS for FreqAI LightGBM Web Interface */
+
+/* Ensure all dashboard cards are the same height */
+.dashboard-card {
+    height: 100%;
+}
+
+/* Metric value styling */
+.metric-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.metric-trend-up {
+    color: var(--bs-success);
+}
+
+.metric-trend-down {
+    color: var(--bs-danger);
+}
+
+.metric-neutral {
+    color: var(--bs-info);
+}
+
+/* Model labels */
+.model-status {
+    width: 100px;
+}
+
+/* Chart containers */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 2rem;
+}
+
+/* Stats card */
+.stats-card {
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Performance indicators */
+.perf-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.perf-good {
+    background-color: var(--bs-success);
+}
+
+.perf-medium {
+    background-color: var(--bs-warning);
+}
+
+.perf-bad {
+    background-color: var(--bs-danger);
+}
+
+/* Trading pair badges */
+.pair-badge {
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 4px 12px;
+}
+
+/* Timeline for events */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--bs-secondary);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.75rem;
+    top: 0.25rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--bs-info);
+}
+
+/* Loading spinner */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-message {
+    color: white;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .chart-container {
+        height: 250px;
+    }
+}
+
+@media (max-width: 576px) {
+    .chart-container {
+        height: 200px;
+    }
+    
+    .metric-value {
+        font-size: 1.5rem;
+    }
+}
+
+/* Animation for number counters */
+.animate-counter {
+    transition: all 0.5s ease;
+}

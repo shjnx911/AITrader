@@ -1,0 +1,998 @@
+{% extends "layout.html" %}
+
+{% block title %}AITradeStrategist - Settings{% endblock %}
+
+{% block page_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Settings Menu</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#generalSettings" class="list-group-item list-group-item-action active" data-bs-toggle="pill">
+                    <i class="fas fa-cogs me-2"></i> General Settings
+                </a>
+                <a href="#apiConnections" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-plug me-2"></i> API Connections
+                </a>
+                <a href="#notification" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-bell me-2"></i> Notification Settings
+                </a>
+                <a href="#appearance" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-palette me-2"></i> Appearance
+                </a>
+                <a href="#security" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-shield-alt me-2"></i> Security
+                </a>
+                <a href="#system" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-server me-2"></i> System
+                </a>
+                <a href="#logs" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-file-alt me-2"></i> Logs
+                </a>
+                <a href="#backup" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                    <i class="fas fa-download me-2"></i> Backup & Restore
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-9">
+        <div class="tab-content">
+            <!-- General Settings -->
+            <div class="tab-pane fade show active" id="generalSettings">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">General Settings</h5>
+                        <button type="button" class="btn btn-sm btn-primary" id="saveGeneralSettings">Save Changes</button>
+                    </div>
+                    <div class="card-body">
+                        <form id="generalSettingsForm">
+                            <div class="mb-3">
+                                <label for="platformName" class="form-label">Platform Name</label>
+                                <input type="text" class="form-control" id="platformName" value="AITradeStrategist">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="timeZone" class="form-label">Time Zone</label>
+                                <select class="form-select" id="timeZone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="America/New_York">Eastern Time (ET)</option>
+                                    <option value="America/Chicago">Central Time (CT)</option>
+                                    <option value="America/Denver">Mountain Time (MT)</option>
+                                    <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                                    <option value="Asia/Tokyo">Japan Standard Time (JST)</option>
+                                    <option value="Europe/London">Greenwich Mean Time (GMT)</option>
+                                    <option value="Europe/Paris">Central European Time (CET)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="defaultCurrency" class="form-label">Default Currency</label>
+                                <select class="form-select" id="defaultCurrency">
+                                    <option value="USD" selected>USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="JPY">JPY</option>
+                                    <option value="GBP">GBP</option>
+                                    <option value="CAD">CAD</option>
+                                    <option value="AUD">AUD</option>
+                                    <option value="CNY">CNY</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="defaultTimeframe" class="form-label">Default Timeframe</label>
+                                <select class="form-select" id="defaultTimeframe">
+                                    <option value="1m">1 Minute</option>
+                                    <option value="5m">5 Minutes</option>
+                                    <option value="15m">15 Minutes</option>
+                                    <option value="1h" selected>1 Hour</option>
+                                    <option value="4h">4 Hours</option>
+                                    <option value="1d">1 Day</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label d-block">Trading Mode</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tradingMode" id="tradingModeBacktest" value="backtest" checked>
+                                    <label class="form-check-label" for="tradingModeBacktest">Backtest Only</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tradingMode" id="tradingModePaper" value="paper">
+                                    <label class="form-check-label" for="tradingModePaper">Paper Trading</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tradingMode" id="tradingModeLive" value="live">
+                                    <label class="form-check-label" for="tradingModeLive">Live Trading</label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="initialCapital" class="form-label">Initial Capital</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="initialCapital" value="10000">
+                                </div>
+                            </div>
+                            
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="autoUpdateModels" checked>
+                                <label class="form-check-label" for="autoUpdateModels">Automatically update AI models</label>
+                            </div>
+                            
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="useGPUAcceleration" checked>
+                                <label class="form-check-label" for="useGPUAcceleration">Use GPU acceleration when available</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Connections -->
+            <div class="tab-pane fade" id="apiConnections">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">API Connections</h5>
+                        <button type="button" class="btn btn-sm btn-primary" id="saveApiSettings">Save Changes</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> Securely configure your exchange API connections for algorithmic trading.
+                        </div>
+                        
+                        <h6 class="mb-3">FreqTrade Integration</h6>
+                        <form id="freqtradeForm">
+                            <div class="mb-3">
+                                <label for="freqtradeUrl" class="form-label">FreqTrade API URL</label>
+                                <input type="text" class="form-control" id="freqtradeUrl" placeholder="http://localhost:8080">
+                                <div class="form-text">URL for your FreqTrade REST API</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="freqtradeUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="freqtradeUsername">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="freqtradePassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="freqtradePassword">
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mb-4">
+                                <button type="button" class="btn btn-outline-primary" id="testFreqtrade">Test Connection</button>
+                                <span id="freqtradeStatus" class="badge bg-warning">Not Connected</span>
+                            </div>
+                        </form>
+                        
+                        <h6 class="mb-3">Exchange API Keys</h6>
+                        <div class="mb-4">
+                            <select class="form-select mb-3" id="exchangeSelect">
+                                <option selected disabled>Select Exchange</option>
+                                <option value="binance">Binance</option>
+                                <option value="coinbase">Coinbase Pro</option>
+                                <option value="kraken">Kraken</option>
+                                <option value="kucoin">KuCoin</option>
+                                <option value="ftx">FTX</option>
+                            </select>
+                            
+                            <div id="exchangeForm" class="d-none">
+                                <div class="mb-3">
+                                    <label for="apiKey" class="form-label">API Key</label>
+                                    <input type="text" class="form-control" id="apiKey">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="apiSecret" class="form-label">API Secret</label>
+                                    <input type="password" class="form-control" id="apiSecret">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="apiPassphrase" class="form-label">Passphrase (if required)</label>
+                                    <input type="password" class="form-control" id="apiPassphrase">
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="readOnly" checked>
+                                    <label class="form-check-label" for="readOnly">
+                                        Read-only access (recommended)
+                                    </label>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-outline-primary" id="testExchangeConnection">Test Connection</button>
+                                    <button type="button" class="btn btn-primary" id="saveExchangeSettings">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mb-3">Connected Exchanges</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Exchange</th>
+                                        <th>Status</th>
+                                        <th>Permissions</th>
+                                        <th>Added</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Binance</td>
+                                        <td><span class="badge bg-success">Connected</span></td>
+                                        <td>Read-only</td>
+                                        <td>2024-04-10</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-pencil-alt"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notification Settings -->
+            <div class="tab-pane fade" id="notification">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Notification Settings</h5>
+                        <button type="button" class="btn btn-sm btn-primary" id="saveNotificationSettings">Save Changes</button>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-3">Email Notifications</h6>
+                        <form id="emailNotificationForm">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableEmailNotifications" checked>
+                                <label class="form-check-label" for="enableEmailNotifications">Enable Email Notifications</label>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="notificationEmail" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="notificationEmail" placeholder="your@email.com">
+                            </div>
+                            
+                            <h6 class="mb-3">Alert Types</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="tradeAlerts" checked>
+                                <label class="form-check-label" for="tradeAlerts">
+                                    Trade Alerts (entries & exits)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="profitAlerts" checked>
+                                <label class="form-check-label" for="profitAlerts">
+                                    Profit/Loss Alerts
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="systemAlerts" checked>
+                                <label class="form-check-label" for="systemAlerts">
+                                    System Alerts (errors, warnings)
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="updateAlerts">
+                                <label class="form-check-label" for="updateAlerts">
+                                    Update Alerts (model updates, software updates)
+                                </label>
+                            </div>
+                            
+                            <h6 class="mb-3">Telegram Integration</h6>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableTelegram">
+                                <label class="form-check-label" for="enableTelegram">Enable Telegram Notifications</label>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="telegramToken" class="form-label">Telegram Bot Token</label>
+                                <input type="text" class="form-control" id="telegramToken" placeholder="123456789:ABCDefGhIJKlmNoPQRsTUVwxyZ">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="telegramChatId" class="form-label">Telegram Chat ID</label>
+                                <input type="text" class="form-control" id="telegramChatId" placeholder="123456789">
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mb-4">
+                                <button type="button" class="btn btn-outline-primary" id="testTelegram">Test Telegram</button>
+                                <span id="telegramStatus" class="badge bg-warning">Not Connected</span>
+                            </div>
+                            
+                            <h6 class="mb-3">SMS Notifications (Twilio)</h6>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableSMS">
+                                <label class="form-check-label" for="enableSMS">Enable SMS Notifications</label>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="twilioSid" class="form-label">Twilio Account SID</label>
+                                <input type="text" class="form-control" id="twilioSid">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="twilioToken" class="form-label">Twilio Auth Token</label>
+                                <input type="password" class="form-control" id="twilioToken">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="twilioPhone" class="form-label">Twilio Phone Number</label>
+                                <input type="text" class="form-control" id="twilioPhone" placeholder="+12345678901">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="recipientPhone" class="form-label">Your Phone Number</label>
+                                <input type="text" class="form-control" id="recipientPhone" placeholder="+12345678901">
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-primary" id="testSMS">Test SMS</button>
+                                <span id="smsStatus" class="badge bg-warning">Not Connected</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Appearance -->
+            <div class="tab-pane fade" id="appearance">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Appearance</h5>
+                        <button type="button" class="btn btn-sm btn-primary" id="saveAppearanceSettings">Save Changes</button>
+                    </div>
+                    <div class="card-body">
+                        <form id="appearanceForm">
+                            <div class="mb-4">
+                                <label class="form-label">Theme</label>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="theme" id="themeDark" value="dark" checked>
+                                        <label class="form-check-label" for="themeDark">
+                                            Dark
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="theme" id="themeLight" value="light">
+                                        <label class="form-check-label" for="themeLight">
+                                            Light
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="theme" id="themeSystem" value="system">
+                                        <label class="form-check-label" for="themeSystem">
+                                            System
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Language</label>
+                                <select class="form-select" id="languageSelect">
+                                    <option value="en" selected>English</option>
+                                    <option value="vi">Vietnamese (Tiếng Việt)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Chart Preferences</label>
+                                <div class="mb-3">
+                                    <label for="chartTheme" class="form-label">Chart Theme</label>
+                                    <select class="form-select" id="chartTheme">
+                                        <option value="dark" selected>Dark</option>
+                                        <option value="light">Light</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="defaultChartType" class="form-label">Default Chart Type</label>
+                                    <select class="form-select" id="defaultChartType">
+                                        <option value="line" selected>Line</option>
+                                        <option value="candle">Candlestick</option>
+                                        <option value="ohlc">OHLC</option>
+                                        <option value="area">Area</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Display Preferences</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="enableAnimations" checked>
+                                    <label class="form-check-label" for="enableAnimations">
+                                        Enable Animations
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="enableRealTimeUpdates" checked>
+                                    <label class="form-check-label" for="enableRealTimeUpdates">
+                                        Enable Real-time Updates
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="compactView">
+                                    <label class="form-check-label" for="compactView">
+                                        Compact View
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Preview</label>
+                            <div class="card bg-secondary p-3">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3 p-3 rounded" style="background-color: #343a40;">
+                                        <i class="fas fa-chart-line text-success"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Sample Widget</h5>
+                                        <small>Preview of theme settings</small>
+                                    </div>
+                                </div>
+                                <div class="progress mb-3" style="height: 10px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-success">Action</button>
+                                    <button type="button" class="btn btn-outline-secondary">Option</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Security -->
+            <div class="tab-pane fade" id="security">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Security Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> Configure security settings to protect your account and trading data.
+                        </div>
+                        
+                        <form id="securityForm">
+                            <h6 class="mb-3">Password Management</h6>
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="currentPassword">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="newPassword">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword">
+                            </div>
+                            
+                            <div class="d-grid mb-4">
+                                <button type="button" class="btn btn-primary" id="changePassword">Change Password</button>
+                            </div>
+                            
+                            <h6 class="mb-3">Two-Factor Authentication (2FA)</h6>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enable2FA">
+                                <label class="form-check-label" for="enable2FA">Enable Two-Factor Authentication</label>
+                            </div>
+                            
+                            <div id="setupTwoFactor" class="d-none mb-4">
+                                <div class="mb-3">
+                                    <p>Scan the QR code with your authentication app (Google Authenticator, Authy, etc.)</p>
+                                    <div class="text-center mb-3">
+                                        <img src="https://via.placeholder.com/150" alt="QR Code" class="img-thumbnail">
+                                    </div>
+                                    <p class="text-center">Or enter this code manually: <code>ABCD EFGH IJKL MNOP</code></p>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="verificationCode" class="form-label">Verification Code</label>
+                                    <input type="text" class="form-control" id="verificationCode" placeholder="Enter the 6-digit code">
+                                </div>
+                                
+                                <button type="button" class="btn btn-primary" id="verify2FA">Verify and Enable 2FA</button>
+                            </div>
+                            
+                            <h6 class="mb-3">API Key Management</h6>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="notifyApiChange" checked>
+                                <label class="form-check-label" for="notifyApiChange">Notify me when API keys are changed</label>
+                            </div>
+                            
+                            <div class="form-check form-switch mb-4">
+                                <input class="form-check-input" type="checkbox" id="requirePasswordForApi" checked>
+                                <label class="form-check-label" for="requirePasswordForApi">Require password confirmation for API changes</label>
+                            </div>
+                            
+                            <h6 class="mb-3">Session Management</h6>
+                            <div class="mb-3">
+                                <label for="sessionTimeout" class="form-label">Session Timeout (minutes)</label>
+                                <input type="number" class="form-control" id="sessionTimeout" value="30" min="5" max="240">
+                                <div class="form-text">Set to 0 for no timeout</div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-primary" id="saveSecuritySettings">Save Security Settings</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System -->
+            <div class="tab-pane fade" id="system">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">System Settings</h5>
+                        <button type="button" class="btn btn-sm btn-primary" id="saveSystemSettings">Save Changes</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i> Changing system settings may affect performance. Proceed with caution.
+                        </div>
+                        
+                        <form id="systemForm">
+                            <h6 class="mb-3">Performance</h6>
+                            <div class="mb-3">
+                                <label for="maxThreads" class="form-label">Max Threads</label>
+                                <input type="number" class="form-control" id="maxThreads" value="4" min="1" max="16">
+                                <div class="form-text">Maximum number of threads for parallel operations</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="cacheSize" class="form-label">Cache Size (MB)</label>
+                                <input type="number" class="form-control" id="cacheSize" value="512" min="128" max="4096">
+                                <div class="form-text">Memory allocated for data caching</div>
+                            </div>
+                            
+                            <div class="form-check form-switch mb-4">
+                                <input class="form-check-input" type="checkbox" id="enableLogging" checked>
+                                <label class="form-check-label" for="enableLogging">Enable Detailed Logging</label>
+                            </div>
+                            
+                            <h6 class="mb-3">GPU Acceleration</h6>
+                            <div class="mb-3">
+                                <div id="gpuInfo" class="p-3 border rounded mb-3">
+                                    <h6>Detected GPU:</h6>
+                                    <p class="mb-1">Name: AMD RX6600</p>
+                                    <p class="mb-1">Memory: 8 GB VRAM</p>
+                                    <p class="mb-0">Status: <span class="badge bg-success">Available</span></p>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" id="enableGPU" checked>
+                                    <label class="form-check-label" for="enableGPU">Enable GPU Acceleration</label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-4">
+                                    <input class="form-check-input" type="checkbox" id="limitGPUMemory" checked>
+                                    <label class="form-check-label" for="limitGPUMemory">Limit GPU Memory Usage</label>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="gpuMemoryLimit" class="form-label">GPU Memory Limit (MB)</label>
+                                    <input type="number" class="form-control" id="gpuMemoryLimit" value="4096" min="1024" max="8192">
+                                </div>
+                            </div>
+                            
+                            <h6 class="mb-3">Database</h6>
+                            <div class="mb-3">
+                                <label for="dbConnectionPool" class="form-label">Database Connection Pool</label>
+                                <input type="number" class="form-control" id="dbConnectionPool" value="10" min="1" max="50">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="dbMaintenanceWindow" class="form-label">Maintenance Window</label>
+                                <select class="form-select" id="dbMaintenanceWindow">
+                                    <option value="disabled">Disabled</option>
+                                    <option value="daily" selected>Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="button" class="btn btn-outline-secondary" id="runDiagnostics">
+                                    <i class="fas fa-heartbeat me-2"></i> Run System Diagnostics
+                                </button>
+                                <button type="button" class="btn btn-outline-warning" id="clearCache">
+                                    <i class="fas fa-broom me-2"></i> Clear System Cache
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Logs -->
+            <div class="tab-pane fade" id="logs">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">System Logs</h5>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="refreshLogs">
+                                <i class="fas fa-sync-alt me-1"></i> Refresh
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="downloadLogs">
+                                <i class="fas fa-download me-1"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form class="mb-3">
+                            <div class="row">
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="logLevel" class="form-label">Log Level</label>
+                                    <select class="form-select" id="logLevel">
+                                        <option value="all">All Levels</option>
+                                        <option value="info">Info & Above</option>
+                                        <option value="warning">Warning & Above</option>
+                                        <option value="error" selected>Errors Only</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="logCategory" class="form-label">Category</label>
+                                    <select class="form-select" id="logCategory">
+                                        <option value="all" selected>All Categories</option>
+                                        <option value="system">System</option>
+                                        <option value="trading">Trading</option>
+                                        <option value="models">AI Models</option>
+                                        <option value="api">API</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="logEntries" class="form-label">Entries</label>
+                                    <select class="form-select" id="logEntries">
+                                        <option value="50">Last 50</option>
+                                        <option value="100" selected>Last 100</option>
+                                        <option value="500">Last 500</option>
+                                        <option value="1000">Last 1000</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="bg-dark p-3 rounded" style="max-height: 400px; overflow-y: auto;">
+                            <pre class="text-light mb-0" style="font-size: 0.875rem; white-space: pre-wrap;"><code>[2024-04-15 09:45:22] [ERROR] [API] Failed to connect to Freqtrade API: Connection refused
+[2024-04-15 09:42:17] [WARNING] [MODELS] Model BTC-LightGBM-v2 using high memory: 3.2 GB
+[2024-04-15 09:40:05] [INFO] [SYSTEM] Application started successfully
+[2024-04-15 09:40:01] [INFO] [DATABASE] Connected to PostgreSQL database
+[2024-04-15 09:39:58] [INFO] [GPU] Detected AMD RX6600 with 8GB VRAM
+[2024-04-15 09:39:55] [INFO] [SYSTEM] Loading configuration from file
+[2024-04-15 09:39:50] [INFO] [SYSTEM] Starting AITradeStrategist v1.0.0</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Backup & Restore -->
+            <div class="tab-pane fade" id="backup">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Backup & Restore</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> Regularly back up your system to prevent data loss. Backups include models, configurations, and trading history.
+                        </div>
+                        
+                        <h6 class="mb-3">Create Backup</h6>
+                        <form id="backupForm" class="mb-4">
+                            <div class="mb-3">
+                                <label for="backupName" class="form-label">Backup Name</label>
+                                <input type="text" class="form-control" id="backupName" placeholder="e.g., Full_Backup_April_2024">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Include in Backup</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="includeModels" checked>
+                                    <label class="form-check-label" for="includeModels">
+                                        AI Models
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="includeSettings" checked>
+                                    <label class="form-check-label" for="includeSettings">
+                                        System Settings
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="includeHistory" checked>
+                                    <label class="form-check-label" for="includeHistory">
+                                        Trading History
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="includeDatabase" checked>
+                                    <label class="form-check-label" for="includeDatabase">
+                                        Database
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-primary" id="createBackup">
+                                    <i class="fas fa-download me-2"></i> Create Backup
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <h6 class="mb-3">Scheduled Backups</h6>
+                        <div class="mb-3">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="enableScheduledBackups" checked>
+                                <label class="form-check-label" for="enableScheduledBackups">Enable Scheduled Backups</label>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="backupFrequency" class="form-label">Backup Frequency</label>
+                                <select class="form-select" id="backupFrequency">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly" selected>Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="backupRetention" class="form-label">Backup Retention</label>
+                                <select class="form-select" id="backupRetention">
+                                    <option value="3">Keep last 3 backups</option>
+                                    <option value="5" selected>Keep last 5 backups</option>
+                                    <option value="10">Keep last 10 backups</option>
+                                    <option value="0">Keep all backups</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mb-3">Available Backups</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Date</th>
+                                        <th>Size</th>
+                                        <th>Type</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Backup_2024_04_14</td>
+                                        <td>2024-04-14 23:00</td>
+                                        <td>245 MB</td>
+                                        <td>Full</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="tooltip" title="Restore">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="tooltip" title="Download">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Backup_2024_04_07</td>
+                                        <td>2024-04-07 23:00</td>
+                                        <td>230 MB</td>
+                                        <td>Full</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="tooltip" title="Restore">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="tooltip" title="Download">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h6 class="mb-3 mt-4">Restore from Backup</h6>
+                        <div class="mb-3">
+                            <label for="backupFile" class="form-label">Select Backup File</label>
+                            <input class="form-control" type="file" id="backupFile">
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-warning" id="restoreBackup">
+                                <i class="fas fa-undo me-2"></i> Restore from Backup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+    
+    // Exchange selection logic
+    document.getElementById('exchangeSelect').addEventListener('change', function() {
+        if (this.value !== 'Select Exchange') {
+            document.getElementById('exchangeForm').classList.remove('d-none');
+        } else {
+            document.getElementById('exchangeForm').classList.add('d-none');
+        }
+    });
+    
+    // 2FA enable/disable logic
+    document.getElementById('enable2FA').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('setupTwoFactor').classList.remove('d-none');
+        } else {
+            document.getElementById('setupTwoFactor').classList.add('d-none');
+        }
+    });
+    
+    // Theme change preview
+    document.querySelectorAll('input[name="theme"]').forEach(input => {
+        input.addEventListener('change', function() {
+            // This would normally change the theme - just a placeholder
+            console.log('Theme changed to: ' + this.value);
+        });
+    });
+    
+    // Test connection buttons
+    document.getElementById('testFreqtrade').addEventListener('click', function() {
+        const url = document.getElementById('freqtradeUrl').value;
+        const username = document.getElementById('freqtradeUsername').value;
+        
+        if (!url) {
+            alert('Please enter FreqTrade API URL');
+            return;
+        }
+        
+        // Simulate connection test
+        setTimeout(() => {
+            const statusBadge = document.getElementById('freqtradeStatus');
+            statusBadge.className = 'badge bg-success';
+            statusBadge.textContent = 'Connected';
+            showAlert('success', 'Successfully connected to FreqTrade API');
+        }, 1000);
+    });
+    
+    document.getElementById('testTelegram').addEventListener('click', function() {
+        const token = document.getElementById('telegramToken').value;
+        const chatId = document.getElementById('telegramChatId').value;
+        
+        if (!token || !chatId) {
+            alert('Please enter Telegram Bot Token and Chat ID');
+            return;
+        }
+        
+        // Simulate test message
+        setTimeout(() => {
+            const statusBadge = document.getElementById('telegramStatus');
+            statusBadge.className = 'badge bg-success';
+            statusBadge.textContent = 'Connected';
+            showAlert('success', 'Test message sent to Telegram');
+        }, 1000);
+    });
+    
+    document.getElementById('testSMS').addEventListener('click', function() {
+        const sid = document.getElementById('twilioSid').value;
+        const token = document.getElementById('twilioToken').value;
+        const phone = document.getElementById('recipientPhone').value;
+        
+        if (!sid || !token || !phone) {
+            alert('Please fill in all Twilio credentials');
+            return;
+        }
+        
+        // Simulate test message
+        setTimeout(() => {
+            const statusBadge = document.getElementById('smsStatus');
+            statusBadge.className = 'badge bg-success';
+            statusBadge.textContent = 'Connected';
+            showAlert('success', 'Test SMS sent successfully');
+        }, 1000);
+    });
+    
+    // Save buttons
+    document.getElementById('saveGeneralSettings').addEventListener('click', function() {
+        // Simulate saving
+        setTimeout(() => {
+            showAlert('success', 'General settings saved successfully');
+        }, 500);
+    });
+    
+    document.getElementById('saveApiSettings').addEventListener('click', function() {
+        // Simulate saving
+        setTimeout(() => {
+            showAlert('success', 'API connection settings saved successfully');
+        }, 500);
+    });
+    
+    document.getElementById('saveNotificationSettings').addEventListener('click', function() {
+        // Simulate saving
+        setTimeout(() => {
+            showAlert('success', 'Notification settings saved successfully');
+        }, 500);
+    });
+    
+    document.getElementById('saveAppearanceSettings').addEventListener('click', function() {
+        // Simulate saving
+        setTimeout(() => {
+            showAlert('success', 'Appearance settings saved successfully');
+        }, 500);
+    });
+    
+    document.getElementById('saveSystemSettings').addEventListener('click', function() {
+        // Simulate saving
+        setTimeout(() => {
+            showAlert('success', 'System settings saved successfully');
+        }, 500);
+    });
+    
+    document.getElementById('refreshLogs').addEventListener('click', function() {
+        // Simulate refreshing logs
+        setTimeout(() => {
+            showAlert('info', 'Logs refreshed');
+        }, 500);
+    });
+    
+    document.getElementById('createBackup').addEventListener('click', function() {
+        const backupName = document.getElementById('backupName').value;
+        
+        if (!backupName) {
+            alert('Please enter a backup name');
+            return;
+        }
+        
+        // Simulate backup creation
+        setTimeout(() => {
+            showAlert('success', 'Backup created successfully: ' + backupName);
+        }, 1500);
+    });
+    
+    // System diagnostics
+    document.getElementById('runDiagnostics').addEventListener('click', function() {
+        // Simulate diagnostics
+        showAlert('info', 'Running system diagnostics...');
+        
+        setTimeout(() => {
+            showAlert('success', 'Diagnostics completed. All systems operational.');
+        }, 2000);
+    });
+    
+    // Clear cache
+    document.getElementById('clearCache').addEventListener('click', function() {
+        // Simulate cache clearing
+        showAlert('info', 'Clearing system cache...');
+        
+        setTimeout(() => {
+            showAlert('success', 'Cache cleared successfully');
+        }, 1500);
+    });
+</script>
+{% endblock %}

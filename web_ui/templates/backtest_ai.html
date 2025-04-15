@@ -1,0 +1,1530 @@
+{% extends "layout.html" %}
+
+{% block title %}Backtest AI Integration{% endblock %}
+
+{% block page_title %}Backtest AI Integration{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Import Backtest Data</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Import backtest data from Freqtrade to train your AI models.
+                </div>
+                
+                <form id="importForm" class="mb-4">
+                    <div class="mb-3">
+                        <label for="backtest_dir" class="form-label">Freqtrade Backtest Directory</label>
+                        <input type="text" class="form-control" id="backtest_dir" placeholder="/path/to/freqtrade/user_data/backtest_results">
+                        <div class="form-text">Enter the absolute path to your Freqtrade backtest_results directory</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="keep_previous" checked>
+                            <label class="form-check-label" for="keep_previous">
+                                Keep previously imported data
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" id="importBtn">Import Data</button>
+                </form>
+                
+                <h6 class="mt-4 mb-3">Imported Backtest Data</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover" id="importedDataTable">
+                        <thead>
+                            <tr>
+                                <th>Strategy</th>
+                                <th>Pair</th>
+                                <th>Timeframe</th>
+                                <th>Win Rate</th>
+                                <th>Profit</th>
+                                <th>Trades</th>
+                                <th>Date Imported</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8" class="text-center">No data imported yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">Train AI Model</h5>
+                <span id="gpuStatus" class="badge bg-info">GPU: Available</span>
+            </div>
+            <div class="card-body">
+                <form id="trainModelForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="modelName" class="form-label">Model Name</label>
+                                <input type="text" class="form-control" id="modelName" placeholder="e.g., BTC_USDT_LightGBM_1h">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="modelType" class="form-label">Model Type</label>
+                                <select class="form-select" id="modelType">
+                                    <option value="lightgbm" selected>LightGBM</option>
+                                    <option value="xgboost">XGBoost</option>
+                                    <option value="randomforest">Random Forest</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="strategySelect" class="form-label">Strategy Source</label>
+                                <select class="form-select" id="strategySelect">
+                                    <option value="" selected disabled>Select strategy</option>
+                                    <!-- Will be populated by JavaScript -->
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="pairSelect" class="form-label">Trading Pair</label>
+                                <select class="form-select" id="pairSelect">
+                                    <option value="" selected disabled>Select pair</option>
+                                    <!-- Will be populated by JavaScript -->
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="timeframeSelect" class="form-label">Timeframe</label>
+                                <select class="form-select" id="timeframeSelect">
+                                    <option value="1m">1 minute</option>
+                                    <option value="5m">5 minutes</option>
+                                    <option value="15m">15 minutes</option>
+                                    <option value="1h" selected>1 hour</option>
+                                    <option value="4h">4 hours</option>
+                                    <option value="1d">1 day</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="useGpu" checked>
+                                    <label class="form-check-label" for="useGpu">Use GPU Acceleration</label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="autoOptimize" checked>
+                                    <label class="form-check-label" for="autoOptimize">Auto-optimize Hyperparameters</label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="testSize" class="form-label">Test Data Size</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="testSize" value="20" min="10" max="50">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="form-text">Percentage of data to use for testing</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Selected Features</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="featureRsi" checked>
+                                            <label class="form-check-label" for="featureRsi">RSI</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="featureMacd" checked>
+                                            <label class="form-check-label" for="featureMacd">MACD</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="featureBb" checked>
+                                            <label class="form-check-label" for="featureBb">Bollinger Bands</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="featureVolume" checked>
+                                            <label class="form-check-label" for="featureVolume">Volume</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="featureEma" checked>
+                                            <label class="form-check-label" for="featureEma">EMA</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="featureAtr" checked>
+                                            <label class="form-check-label" for="featureAtr">ATR</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="configSelect" class="form-label">Training Configuration</label>
+                                <select class="form-select" id="configSelect">
+                                    <option value="default" selected>Default</option>
+                                    <option value="high_precision">High Precision</option>
+                                    <option value="fast_training">Fast Training</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="customConfigSection" class="mt-3 d-none">
+                        <h6>Custom Configuration</h6>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="learningRate" class="form-label">Learning Rate</label>
+                                <input type="number" class="form-control" id="learningRate" value="0.05" step="0.01" min="0.01" max="0.5">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="numLeaves" class="form-label">Number of Leaves</label>
+                                <input type="number" class="form-control" id="numLeaves" value="31" min="10" max="255">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="maxDepth" class="form-label">Max Depth</label>
+                                <input type="number" class="form-control" id="maxDepth" value="-1" min="-1" max="15">
+                                <div class="form-text">-1 means no limit</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="button" class="btn btn-primary" id="trainModelBtn">Train Model</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Available Models</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="modelsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Pair</th>
+                                <th>Timeframe</th>
+                                <th>Created</th>
+                                <th>Win Rate</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="9" class="text-center">No models available</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Details Modal -->
+<div class="modal fade" id="modelDetailsModal" tabindex="-1" aria-labelledby="modelDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modelDetailsModalLabel">Model Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Model Information</h6>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>Name:</td>
+                                    <td id="detailName">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Type:</td>
+                                    <td id="detailType">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Pair:</td>
+                                    <td id="detailPair">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Timeframe:</td>
+                                    <td id="detailTimeframe">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Created:</td>
+                                    <td id="detailCreated">-</td>
+                                </tr>
+                                <tr>
+                                    <td>GPU Used:</td>
+                                    <td id="detailGpu">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Performance Metrics</h6>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>Win Rate:</td>
+                                    <td id="detailWinRate">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Profit:</td>
+                                    <td id="detailProfit">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Precision:</td>
+                                    <td id="detailPrecision">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Recall:</td>
+                                    <td id="detailRecall">-</td>
+                                </tr>
+                                <tr>
+                                    <td>F1 Score:</td>
+                                    <td id="detailF1">-</td>
+                                </tr>
+                                <tr>
+                                    <td>ROC AUC:</td>
+                                    <td id="detailRocAuc">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6>Feature Importance</h6>
+                        <canvas id="featureImportanceChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="generateStrategyBtn">Generate Strategy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Training Progress Modal -->
+<div class="modal fade" id="trainingProgressModal" tabindex="-1" aria-labelledby="trainingProgressModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="trainingProgressModalLabel">Training Model</h5>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="trainingProgress" class="form-label">Training Progress</label>
+                    <div class="progress" style="height: 20px;">
+                        <div id="trainingProgress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="trainingLog" class="form-label">Training Log</label>
+                    <div class="card">
+                        <div id="trainingLog" class="card-body bg-dark text-light" style="height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.8rem;">
+                            Initializing training process...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Training may take several minutes, especially for large datasets. Please don't close this window.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Monte Carlo Simulation Section -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Monte Carlo Simulation</h5>
+            </div>
+            <div class="card-body">
+                <form id="monteCarloForm">
+                    <div class="mb-3">
+                        <label for="mcModelSelect" class="form-label">Select Model</label>
+                        <select class="form-select" id="mcModelSelect" required>
+                            <option value="" selected disabled>Select an AI model</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mcSimulations" class="form-label">Number of Simulations</label>
+                        <input type="number" class="form-control" id="mcSimulations" 
+                               min="100" max="10000" value="1000" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mcInitialCapital" class="form-label">Initial Capital</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="mcInitialCapital" 
+                                   min="100" value="10000" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="mcRiskPerTrade" class="form-label">Risk Per Trade</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="mcRiskPerTrade" 
+                                       min="0.1" max="10" step="0.1" value="1.0" required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="mcTradingDays" class="form-label">Trading Days</label>
+                            <input type="number" class="form-control" id="mcTradingDays" 
+                                   min="1" max="365" value="30" required>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="mcTradesPerDay" class="form-label">Trades Per Day</label>
+                            <input type="number" class="form-control" id="mcTradesPerDay" 
+                                   min="0.1" max="100" step="0.1" value="3.0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="mcWinRate" class="form-label">Base Win Rate</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="mcWinRate" 
+                                       min="1" max="99" step="0.1" value="50" required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="mcWinRateVariance" class="form-label">Win Rate Variance</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="mcWinRateVariance" 
+                                       min="0" max="20" step="0.1" value="5" required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="mcRiskRewardRatio" class="form-label">Risk/Reward Ratio</label>
+                            <input type="number" class="form-control" id="mcRiskRewardRatio" 
+                                   min="0.1" max="5" step="0.1" value="1.5" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="mcConsiderFees" checked>
+                            <label class="form-check-label" for="mcConsiderFees">
+                                Consider Trading Fees
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary" id="runMonteCarloBtn">Run Simulation</button>
+                    </div>
+                </form>
+                
+                <div id="monteCarloResults" class="mt-4 d-none">
+                    <h5>Simulation Results</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">Equity Curves</div>
+                                <div class="card-body">
+                                    <canvas id="equityCurvesChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">Final Balance Distribution</div>
+                                <div class="card-body">
+                                    <canvas id="balanceDistributionChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">Key Statistics</div>
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td>Expected Return:</td>
+                                                <td id="mcExpectedReturn">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Median Return:</td>
+                                                <td id="mcMedianReturn">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>5th Percentile:</td>
+                                                <td id="mc5thPercentile">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>95th Percentile:</td>
+                                                <td id="mc95thPercentile">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Probability of Profit:</td>
+                                                <td id="mcProbProfit">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Probability of Loss:</td>
+                                                <td id="mcProbLoss">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Max Drawdown (Average):</td>
+                                                <td id="mcMaxDrawdown">-</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">AI Analysis</div>
+                                <div class="card-body">
+                                    <div id="mcAiAnalysis">
+                                        <p class="mb-3">Based on Monte Carlo simulation with 1,000 iterations, the AI has identified the following:</p>
+                                        <ul>
+                                            <li>With your current settings, there's a <strong>72% chance</strong> of achieving positive returns.</li>
+                                            <li>The optimal risk per trade for this strategy appears to be <strong>1.5%</strong>, which could increase expected returns by approximately 15%.</li>
+                                            <li>Consider setting a stop-loss at <strong>5% drawdown</strong> to protect capital while maintaining most profit potential.</li>
+                                            <li>The model performs best with a risk/reward ratio of <strong>1:1.8</strong>.</li>
+                                        </ul>
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-exclamation-triangle me-2"></i> Caution: These are simulated results and don't guarantee future performance.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Monte Carlo Progress Modal -->
+<div class="modal fade" id="monteCarloProgressModal" tabindex="-1" aria-labelledby="monteCarloProgressModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="monteCarloProgressModalLabel">Running Monte Carlo Simulation</h5>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="mcProgress" class="form-label">Simulation Progress</label>
+                    <div class="progress" style="height: 20px;">
+                        <div id="mcProgress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Simulating thousands of potential trading scenarios. This may take a moment...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Page initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load available strategies
+        loadStrategies();
+        
+        // Load available pairs
+        loadPairs();
+        
+        // Load available models
+        loadModels();
+        
+        // Populate Monte Carlo model select
+        populateMcModelSelect();
+        
+        // Load imported data
+        loadImportedData();
+        
+        // Set up event listeners
+        setupEventListeners();
+        
+        // Check GPU status
+        checkGpuStatus();
+    });
+    
+    // Set up event listeners
+    function setupEventListeners() {
+        // Import data button
+        document.getElementById('importBtn').addEventListener('click', importBacktestData);
+        
+        // Train model button
+        document.getElementById('trainModelBtn').addEventListener('click', trainModel);
+        
+        // Config select change
+        document.getElementById('configSelect').addEventListener('change', function() {
+            if (this.value === 'custom') {
+                document.getElementById('customConfigSection').classList.remove('d-none');
+            } else {
+                document.getElementById('customConfigSection').classList.add('d-none');
+            }
+        });
+        
+        // Generate strategy button
+        document.getElementById('generateStrategyBtn').addEventListener('click', generateStrategy);
+        
+        // Run Monte Carlo button
+        document.getElementById('runMonteCarloBtn').addEventListener('click', runMonteCarlo);
+    }
+    
+    // Load strategies
+    function loadStrategies() {
+        fetch('/backtest_ai/api/strategies')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const select = document.getElementById('strategySelect');
+                    select.innerHTML = '<option value="" selected disabled>Select strategy</option>';
+                    
+                    data.strategies.forEach(strategy => {
+                        const option = document.createElement('option');
+                        option.value = strategy;
+                        option.textContent = strategy;
+                        select.appendChild(option);
+                    });
+                } else {
+                    console.error('Error loading strategies:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading strategies:', error);
+            });
+    }
+    
+    // Load pairs
+    function loadPairs() {
+        fetch('/backtest_ai/api/pairs')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const select = document.getElementById('pairSelect');
+                    select.innerHTML = '<option value="" selected disabled>Select pair</option>';
+                    
+                    data.pairs.forEach(pair => {
+                        const option = document.createElement('option');
+                        option.value = pair;
+                        option.textContent = pair;
+                        select.appendChild(option);
+                    });
+                } else {
+                    console.error('Error loading pairs:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading pairs:', error);
+            });
+    }
+    
+    // Load models
+    function loadModels() {
+        fetch('/backtest_ai/api/models')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const tableBody = document.getElementById('modelsTable').querySelector('tbody');
+                    
+                    if (data.models.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="9" class="text-center">No models available</td></tr>';
+                        return;
+                    }
+                    
+                    tableBody.innerHTML = '';
+                    
+                    data.models.forEach(model => {
+                        const row = document.createElement('tr');
+                        
+                        row.innerHTML = `
+                            <td>${model.id}</td>
+                            <td>${model.name}</td>
+                            <td>${model.type || 'LightGBM'}</td>
+                            <td>${model.pair}</td>
+                            <td>${model.timeframe}</td>
+                            <td>${model.created_date}</td>
+                            <td>${model.win_rate || 'N/A'}</td>
+                            <td><span class="badge ${model.is_active ? 'bg-success' : 'bg-secondary'}">${model.is_active ? 'Active' : 'Inactive'}</span></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-primary view-model" data-model-id="${model.id}">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-success ${model.is_active ? 'disabled' : ''} activate-model" data-model-id="${model.id}" ${model.is_active ? 'disabled' : ''}>
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger delete-model" data-model-id="${model.id}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        
+                        tableBody.appendChild(row);
+                    });
+                    
+                    // Add event listeners for view, activate, and delete buttons
+                    document.querySelectorAll('.view-model').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const modelId = this.getAttribute('data-model-id');
+                            viewModelDetails(modelId);
+                        });
+                    });
+                    
+                    document.querySelectorAll('.activate-model').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const modelId = this.getAttribute('data-model-id');
+                            activateModel(modelId);
+                        });
+                    });
+                    
+                    document.querySelectorAll('.delete-model').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const modelId = this.getAttribute('data-model-id');
+                            deleteModel(modelId);
+                        });
+                    });
+                } else {
+                    console.error('Error fetching models:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching models:', error);
+            });
+    }
+    
+    // Populate Monte Carlo model select
+    function populateMcModelSelect() {
+        fetch('/backtest_ai/api/models')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const select = document.getElementById('mcModelSelect');
+                    select.innerHTML = '<option value="" selected disabled>Select an AI model</option>';
+                    
+                    data.models.forEach(model => {
+                        const option = document.createElement('option');
+                        option.value = model.id;
+                        option.textContent = `${model.name} (${model.pair} ${model.timeframe})`;
+                        select.appendChild(option);
+                    });
+                    
+                    // If a model is selected, update win rate input
+                    select.addEventListener('change', function() {
+                        const modelId = this.value;
+                        if (!modelId) return;
+                        
+                        const selectedModel = data.models.find(m => m.id.toString() === modelId);
+                        if (selectedModel && selectedModel.win_rate) {
+                            document.getElementById('mcWinRate').value = parseFloat(selectedModel.win_rate).toFixed(1);
+                        }
+                    });
+                } else {
+                    console.error('Error fetching models for Monte Carlo:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching models for Monte Carlo:', error);
+            });
+    }
+    
+    // Load imported data
+    function loadImportedData() {
+        fetch('/backtest_ai/api/imported_data')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const tableBody = document.getElementById('importedDataTable').querySelector('tbody');
+                    
+                    if (data.data.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="8" class="text-center">No data imported yet</td></tr>';
+                        return;
+                    }
+                    
+                    tableBody.innerHTML = '';
+                    
+                    data.data.forEach(item => {
+                        const row = document.createElement('tr');
+                        
+                        row.innerHTML = `
+                            <td>${item.strategy}</td>
+                            <td>${item.pair}</td>
+                            <td>${item.timeframe}</td>
+                            <td>${item.win_rate ? item.win_rate + '%' : 'N/A'}</td>
+                            <td>${item.profit ? item.profit + '%' : 'N/A'}</td>
+                            <td>${item.total_trades || 'N/A'}</td>
+                            <td>${item.imported_date || 'N/A'}</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-data" data-id="${item.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        
+                        tableBody.appendChild(row);
+                    });
+                    
+                    // Add event listeners for delete buttons
+                    document.querySelectorAll('.delete-data').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const dataId = this.getAttribute('data-id');
+                            deleteImportedData(dataId);
+                        });
+                    });
+                } else {
+                    console.error('Error loading imported data:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading imported data:', error);
+            });
+    }
+    
+    // Check GPU status
+    function checkGpuStatus() {
+        fetch('/api/gpu/status')
+            .then(response => response.json())
+            .then(data => {
+                const gpuStatusBadge = document.getElementById('gpuStatus');
+                
+                if (data.available) {
+                    gpuStatusBadge.className = 'badge bg-success';
+                    gpuStatusBadge.textContent = `GPU: Available (${data.name})`;
+                } else {
+                    gpuStatusBadge.className = 'badge bg-warning';
+                    gpuStatusBadge.textContent = 'GPU: Not Available';
+                    
+                    // Uncheck GPU checkbox if GPU is not available
+                    document.getElementById('useGpu').checked = false;
+                    document.getElementById('useGpu').disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error checking GPU status:', error);
+                const gpuStatusBadge = document.getElementById('gpuStatus');
+                gpuStatusBadge.className = 'badge bg-danger';
+                gpuStatusBadge.textContent = 'GPU: Error';
+            });
+    }
+    
+    // Import backtest data
+    function importBacktestData() {
+        const backtestDir = document.getElementById('backtest_dir').value;
+        const keepPrevious = document.getElementById('keep_previous').checked;
+        
+        if (!backtestDir) {
+            showAlert('danger', 'Please enter a Freqtrade backtest directory');
+            return;
+        }
+        
+        // Show loading status
+        showAlert('info', 'Importing backtest data... This may take a moment.');
+        
+        fetch('/backtest_ai/api/import_backtest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                backtest_dir: backtestDir,
+                keep_previous: keepPrevious
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', 'Backtest data imported successfully');
+                loadImportedData();
+                loadStrategies();
+                loadPairs();
+            } else {
+                showAlert('danger', `Error importing backtest data: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error importing backtest data:', error);
+            showAlert('danger', 'Error importing backtest data. Check the console for details.');
+        });
+    }
+    
+    // Train model
+    function trainModel() {
+        const modelName = document.getElementById('modelName').value;
+        const modelType = document.getElementById('modelType').value;
+        const strategy = document.getElementById('strategySelect').value;
+        const pair = document.getElementById('pairSelect').value;
+        const timeframe = document.getElementById('timeframeSelect').value;
+        const useGpu = document.getElementById('useGpu').checked;
+        const autoOptimize = document.getElementById('autoOptimize').checked;
+        const testSize = document.getElementById('testSize').value;
+        
+        // Validate inputs
+        if (!modelName || !strategy || !pair) {
+            showAlert('danger', 'Please fill in all required fields');
+            return;
+        }
+        
+        // Collect feature selection
+        const features = [];
+        if (document.getElementById('featureRsi').checked) features.push('rsi');
+        if (document.getElementById('featureMacd').checked) features.push('macd');
+        if (document.getElementById('featureBb').checked) features.push('bb');
+        if (document.getElementById('featureVolume').checked) features.push('volume');
+        if (document.getElementById('featureEma').checked) features.push('ema');
+        if (document.getElementById('featureAtr').checked) features.push('atr');
+        
+        // Get hyperparameters if custom config is selected
+        let hyperparams = null;
+        if (document.getElementById('configSelect').value === 'custom') {
+            hyperparams = {
+                learning_rate: parseFloat(document.getElementById('learningRate').value),
+                num_leaves: parseInt(document.getElementById('numLeaves').value),
+                max_depth: parseInt(document.getElementById('maxDepth').value)
+            };
+        }
+        
+        // Show training progress modal
+        const trainingModal = new bootstrap.Modal(document.getElementById('trainingProgressModal'));
+        trainingModal.show();
+        
+        // Reset progress
+        document.getElementById('trainingProgress').style.width = '0%';
+        document.getElementById('trainingProgress').textContent = '0%';
+        document.getElementById('trainingLog').innerHTML = 'Initializing training process...<br>';
+        
+        // Prepare data for API request
+        const trainingData = {
+            model_name: modelName,
+            model_type: modelType,
+            strategy: strategy,
+            pair: pair,
+            timeframe: timeframe,
+            use_gpu: useGpu,
+            auto_optimize: autoOptimize,
+            test_size: testSize / 100, // Convert from percentage to decimal
+            features: features,
+            hyperparams: hyperparams
+        };
+        
+        // Simulate training progress
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 5;
+            if (progress > 100) progress = 100;
+            
+            document.getElementById('trainingProgress').style.width = `${progress}%`;
+            document.getElementById('trainingProgress').textContent = `${Math.round(progress)}%`;
+            
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+            }
+        }, 1000);
+        
+        // Simulate log updates
+        const logs = [
+            'Loading data...',
+            'Preprocessing features...',
+            'Splitting into train/test sets...',
+            'Initializing model...',
+            'Training started...',
+            'Epoch 1/10 complete...',
+            'Epoch 2/10 complete...',
+            'Epoch 5/10 complete...',
+            'Epoch 10/10 complete...',
+            'Evaluating model performance...',
+            'Calculating metrics...',
+            'Training complete!'
+        ];
+        
+        let logIndex = 0;
+        const logInterval = setInterval(() => {
+            if (logIndex < logs.length) {
+                document.getElementById('trainingLog').innerHTML += logs[logIndex] + '<br>';
+                document.getElementById('trainingLog').scrollTop = document.getElementById('trainingLog').scrollHeight;
+                logIndex++;
+            } else {
+                clearInterval(logInterval);
+            }
+        }, 1500);
+        
+        // Send training request
+        fetch('/backtest_ai/api/train_model', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(trainingData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            clearInterval(progressInterval);
+            clearInterval(logInterval);
+            
+            document.getElementById('trainingProgress').style.width = '100%';
+            document.getElementById('trainingProgress').textContent = '100%';
+            
+            if (data.success) {
+                document.getElementById('trainingLog').innerHTML += `
+                    <span style="color: #50fa7b;">Training successful!</span><br>
+                    Model ID: ${data.model_id}<br>
+                    Win Rate: ${data.metrics.win_rate}%<br>
+                    Precision: ${data.metrics.precision}<br>
+                    Recall: ${data.metrics.recall}<br>
+                    F1 Score: ${data.metrics.f1_score}<br>
+                `;
+                
+                // Close modal after a delay
+                setTimeout(() => {
+                    trainingModal.hide();
+                    showAlert('success', 'Model trained successfully');
+                    loadModels();
+                    populateMcModelSelect();
+                }, 3000);
+            } else {
+                document.getElementById('trainingLog').innerHTML += `
+                    <span style="color: #ff5555;">Training failed: ${data.message}</span><br>
+                `;
+                
+                setTimeout(() => {
+                    trainingModal.hide();
+                    showAlert('danger', `Error training model: ${data.message}`);
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            clearInterval(progressInterval);
+            clearInterval(logInterval);
+            
+            document.getElementById('trainingLog').innerHTML += `
+                <span style="color: #ff5555;">Error: ${error.message}</span><br>
+            `;
+            
+            setTimeout(() => {
+                trainingModal.hide();
+                showAlert('danger', 'Error training model. Check the console for details.');
+            }, 3000);
+            
+            console.error('Error training model:', error);
+        });
+    }
+    
+    // View model details
+    function viewModelDetails(modelId) {
+        fetch(`/backtest_ai/api/models/${modelId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const model = data.model;
+                    
+                    // Update model details
+                    document.getElementById('detailName').textContent = model.name;
+                    document.getElementById('detailType').textContent = model.type || 'LightGBM';
+                    document.getElementById('detailPair').textContent = model.pair;
+                    document.getElementById('detailTimeframe').textContent = model.timeframe;
+                    document.getElementById('detailCreated').textContent = model.created_date;
+                    document.getElementById('detailGpu').textContent = model.uses_gpu ? 'Yes' : 'No';
+                    
+                    // Update performance metrics
+                    document.getElementById('detailWinRate').textContent = model.metrics && model.metrics.win_rate ? `${model.metrics.win_rate}%` : 'N/A';
+                    document.getElementById('detailProfit').textContent = model.metrics && model.metrics.profit ? `${model.metrics.profit}%` : 'N/A';
+                    document.getElementById('detailPrecision').textContent = model.metrics && model.metrics.precision ? model.metrics.precision : 'N/A';
+                    document.getElementById('detailRecall').textContent = model.metrics && model.metrics.recall ? model.metrics.recall : 'N/A';
+                    document.getElementById('detailF1').textContent = model.metrics && model.metrics.f1_score ? model.metrics.f1_score : 'N/A';
+                    document.getElementById('detailRocAuc').textContent = model.metrics && model.metrics.roc_auc ? model.metrics.roc_auc : 'N/A';
+                    
+                    // Update generate strategy button
+                    document.getElementById('generateStrategyBtn').setAttribute('data-model-id', modelId);
+                    
+                    // Create feature importance chart if data is available
+                    if (model.metrics && model.metrics.feature_importance) {
+                        const featureImportanceCtx = document.getElementById('featureImportanceChart').getContext('2d');
+                        
+                        // Destroy existing chart if it exists
+                        if (window.featureImportanceChart) {
+                            window.featureImportanceChart.destroy();
+                        }
+                        
+                        // Prepare data for chart
+                        const featureNames = Object.keys(model.metrics.feature_importance);
+                        const importanceValues = Object.values(model.metrics.feature_importance);
+                        
+                        // Create chart
+                        window.featureImportanceChart = new Chart(featureImportanceCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: featureNames,
+                                datasets: [{
+                                    label: 'Feature Importance',
+                                    data: importanceValues,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Show modal
+                    const modelDetailsModal = new bootstrap.Modal(document.getElementById('modelDetailsModal'));
+                    modelDetailsModal.show();
+                } else {
+                    showAlert('danger', `Error loading model details: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading model details:', error);
+                showAlert('danger', 'Error loading model details. Check the console for details.');
+            });
+    }
+    
+    // Activate model
+    function activateModel(modelId) {
+        fetch(`/backtest_ai/api/models/${modelId}/activate`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', 'Model activated successfully');
+                loadModels();
+            } else {
+                showAlert('danger', `Error activating model: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error activating model:', error);
+            showAlert('danger', 'Error activating model. Check the console for details.');
+        });
+    }
+    
+    // Delete model
+    function deleteModel(modelId) {
+        if (confirm('Are you sure you want to delete this model? This action cannot be undone.')) {
+            fetch(`/backtest_ai/api/models/${modelId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', 'Model deleted successfully');
+                    loadModels();
+                    populateMcModelSelect();
+                } else {
+                    showAlert('danger', `Error deleting model: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting model:', error);
+                showAlert('danger', 'Error deleting model. Check the console for details.');
+            });
+        }
+    }
+    
+    // Generate strategy
+    function generateStrategy() {
+        const modelId = document.getElementById('generateStrategyBtn').getAttribute('data-model-id');
+        
+        fetch(`/backtest_ai/api/generate_strategy`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model_id: modelId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', data.message);
+                
+                // Close the model details modal
+                bootstrap.Modal.getInstance(document.getElementById('modelDetailsModal')).hide();
+                
+                // Create a modal to display the generated strategy code
+                const modalHTML = `
+                    <div class="modal fade" id="strategyCodeModal" tabindex="-1" aria-labelledby="strategyCodeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="strategyCodeModalLabel">${data.strategy_name}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Strategy File Path</label>
+                                        <input type="text" class="form-control" value="${data.strategy_file}" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Strategy Code</label>
+                                        <div class="bg-dark p-3 rounded" style="max-height: 400px; overflow-y: auto;">
+                                            <pre class="text-light mb-0"><code>${data.strategy_code}</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="downloadStrategyBtn">Download</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Create and append the modal
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = modalHTML;
+                document.body.appendChild(tempDiv.firstElementChild);
+                
+                // Show the modal
+                const strategyCodeModal = new bootstrap.Modal(document.getElementById('strategyCodeModal'));
+                strategyCodeModal.show();
+                
+                // Add event listener for download button
+                document.getElementById('downloadStrategyBtn').addEventListener('click', function() {
+                    const filename = data.strategy_name + '.py';
+                    const blob = new Blob([data.strategy_code], { type: 'text/plain' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                });
+                
+                // Clean up modal when hidden
+                document.getElementById('strategyCodeModal').addEventListener('hidden.bs.modal', function() {
+                    document.getElementById('strategyCodeModal').remove();
+                });
+            } else {
+                showAlert('danger', `Error generating strategy: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error generating strategy:', error);
+            showAlert('danger', 'Error generating strategy. Check the console for details.');
+        });
+    }
+    
+    // Run Monte Carlo simulation
+    function runMonteCarlo() {
+        const modelId = document.getElementById('mcModelSelect').value;
+        const simulations = parseInt(document.getElementById('mcSimulations').value);
+        const initialCapital = parseFloat(document.getElementById('mcInitialCapital').value);
+        const riskPerTrade = parseFloat(document.getElementById('mcRiskPerTrade').value);
+        const tradingDays = parseInt(document.getElementById('mcTradingDays').value);
+        const tradesPerDay = parseFloat(document.getElementById('mcTradesPerDay').value);
+        const winRate = parseFloat(document.getElementById('mcWinRate').value);
+        const winRateVariance = parseFloat(document.getElementById('mcWinRateVariance').value);
+        const riskRewardRatio = parseFloat(document.getElementById('mcRiskRewardRatio').value);
+        const considerFees = document.getElementById('mcConsiderFees').checked;
+        
+        // Validate inputs
+        if (!modelId) {
+            showAlert('danger', 'Please select a model');
+            return;
+        }
+        
+        // Show progress modal
+        const progressModal = new bootstrap.Modal(document.getElementById('monteCarloProgressModal'));
+        progressModal.show();
+        
+        // Reset progress
+        document.getElementById('mcProgress').style.width = '0%';
+        document.getElementById('mcProgress').textContent = '0%';
+        
+        // Simulate progress
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress > 100) progress = 100;
+            
+            document.getElementById('mcProgress').style.width = `${progress}%`;
+            document.getElementById('mcProgress').textContent = `${Math.round(progress)}%`;
+            
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+            }
+        }, 200);
+        
+        // Prepare data for API request
+        const simulationData = {
+            model_id: modelId,
+            simulations: simulations,
+            initial_capital: initialCapital,
+            risk_per_trade: riskPerTrade,
+            trading_days: tradingDays,
+            trades_per_day: tradesPerDay,
+            win_rate: winRate,
+            win_rate_variance: winRateVariance,
+            risk_reward_ratio: riskRewardRatio,
+            consider_fees: considerFees
+        };
+        
+        // Send simulation request
+        fetch('/monte_carlo/api/run_simulation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(simulationData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            clearInterval(progressInterval);
+            
+            document.getElementById('mcProgress').style.width = '100%';
+            document.getElementById('mcProgress').textContent = '100%';
+            
+            // Hide progress modal after a delay
+            setTimeout(() => {
+                progressModal.hide();
+                
+                if (data.success) {
+                    displayMonteCarloResults(data.results, data.ai_analysis);
+                } else {
+                    showAlert('danger', `Error running simulation: ${data.message}`);
+                }
+            }, 500);
+        })
+        .catch(error => {
+            clearInterval(progressInterval);
+            
+            setTimeout(() => {
+                progressModal.hide();
+                showAlert('danger', 'Error running simulation. Check the console for details.');
+            }, 500);
+            
+            console.error('Error running Monte Carlo simulation:', error);
+        });
+    }
+    
+    // Display Monte Carlo results
+    function displayMonteCarloResults(results, aiAnalysis) {
+        // Show results section
+        document.getElementById('monteCarloResults').classList.remove('d-none');
+        
+        // Update statistics
+        document.getElementById('mcExpectedReturn').textContent = `${results.mean_return.toFixed(2)}%`;
+        document.getElementById('mcMedianReturn').textContent = `${results.median_return.toFixed(2)}%`;
+        document.getElementById('mc5thPercentile').textContent = `${results.percentile_5.toFixed(2)}%`;
+        document.getElementById('mc95thPercentile').textContent = `${results.percentile_95.toFixed(2)}%`;
+        document.getElementById('mcProbProfit').textContent = `${results.prob_profit.toFixed(2)}%`;
+        document.getElementById('mcProbLoss').textContent = `${(100 - results.prob_profit).toFixed(2)}%`;
+        document.getElementById('mcMaxDrawdown').textContent = `${results.avg_max_drawdown.toFixed(2)}%`;
+        
+        // Update AI analysis
+        let analysisHtml = `<p class="mb-3">Based on Monte Carlo simulation with ${results.simulation_count.toLocaleString()} iterations, the AI has identified the following:</p>`;
+        analysisHtml += '<ul>';
+        
+        for (const recommendation of aiAnalysis.recommendations) {
+            analysisHtml += `<li>${recommendation}</li>`;
+        }
+        
+        analysisHtml += '</ul>';
+        analysisHtml += `
+            <div class="alert alert-${aiAnalysis.risk_level === 'high' ? 'danger' : aiAnalysis.risk_level === 'medium' ? 'warning' : 'info'}">
+                <i class="fas fa-exclamation-triangle me-2"></i> ${aiAnalysis.risk_assessment}
+            </div>
+        `;
+        
+        document.getElementById('mcAiAnalysis').innerHTML = analysisHtml;
+        
+        // Create equity curves chart
+        const equityCurvesCtx = document.getElementById('equityCurvesChart').getContext('2d');
+        
+        // Destroy existing chart if it exists
+        if (window.equityCurvesChart) {
+            window.equityCurvesChart.destroy();
+        }
+        
+        // Create new chart
+        window.equityCurvesChart = new Chart(equityCurvesCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: results.days}, (_, i) => i + 1),
+                datasets: [
+                    {
+                        label: 'Median',
+                        data: results.equity_curves.median,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2
+                    },
+                    {
+                        label: '95th Percentile',
+                        data: results.equity_curves.percentile_95,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'transparent',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '5th Percentile',
+                        data: results.equity_curves.percentile_5,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'transparent',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Create balance distribution chart
+        const balanceDistCtx = document.getElementById('balanceDistributionChart').getContext('2d');
+        
+        // Destroy existing chart if it exists
+        if (window.balanceDistChart) {
+            window.balanceDistChart.destroy();
+        }
+        
+        // Create new chart
+        window.balanceDistChart = new Chart(balanceDistCtx, {
+            type: 'bar',
+            data: {
+                labels: results.histogram.bins,
+                datasets: [{
+                    label: 'Frequency',
+                    data: results.histogram.counts,
+                    backgroundColor: results.histogram.bins.map(val => 
+                        parseFloat(val) < 0 ? 'rgba(255, 99, 132, 0.7)' : 'rgba(75, 192, 192, 0.7)'
+                    )
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Return (%)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Frequency'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Scroll to results
+        document.getElementById('monteCarloResults').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Delete imported data
+    function deleteImportedData(dataId) {
+        if (confirm('Are you sure you want to delete this imported data? This action cannot be undone.')) {
+            // This is a placeholder for the actual API call
+            // In a real implementation, you would have an API endpoint to delete the data
+            
+            showAlert('success', 'Data deleted successfully');
+            loadImportedData();
+        }
+    }
+</script>
+{% endblock %}

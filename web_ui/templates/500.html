@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}500 - Server Error{% endblock %}
+
+{% block page_title %}500 - Internal Server Error{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="alert alert-danger">
+        <h4 class="alert-heading">An error occurred on our server!</h4>
+        <p>We're sorry, but something went wrong while processing your request. Our team has been notified of this issue.</p>
+        <hr>
+        <p class="mb-0">Please try again later or <a href="{{ url_for('dashboard') }}" class="alert-link">return to the dashboard</a>.</p>
+    </div>
+</div>
+{% endblock %}

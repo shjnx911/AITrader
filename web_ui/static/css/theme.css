@@ -1,0 +1,310 @@
+/**
+ * AITradeStrategist Theme System
+ * Supports both dark and light mode
+ */
+
+/* Theme Variables */
+
+/* Default Light Theme */
+[data-bs-theme="light"] {
+  --bs-body-bg: #f8f9fa;
+  --bs-body-color: #212529;
+  --bs-primary: #0d6efd;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-dark: #212529;
+  --bs-light: #f8f9fa;
+  
+  --bs-card-bg: #ffffff;
+  --bs-card-border-color: rgba(0, 0, 0, 0.125);
+  --bs-card-cap-bg: rgba(0, 0, 0, 0.03);
+  
+  --bs-sidebar-bg: #f8f9fa;
+  --bs-sidebar-border: #dee2e6;
+  --bs-sidebar-active: rgba(13, 110, 253, 0.1);
+  
+  --bs-nav-active-color: #0d6efd;
+  --bs-nav-active-bg: rgba(13, 110, 253, 0.1);
+  
+  --bs-chart-grid: rgba(0, 0, 0, 0.1);
+  --bs-chart-text: #666666;
+  --bs-chart-line: rgba(13, 110, 253, 0.8);
+  --bs-chart-fill: rgba(13, 110, 253, 0.2);
+  
+  --bs-table-border: #dee2e6;
+  --bs-table-striped: rgba(0, 0, 0, 0.05);
+  --bs-table-hover: rgba(0, 0, 0, 0.075);
+  
+  --bs-input-bg: #ffffff;
+  --bs-input-border: #ced4da;
+  --bs-input-focus-border: #86b7fe;
+  
+  --bs-dropdown-bg: #ffffff;
+  --bs-dropdown-link-hover-bg: #f8f9fa;
+  
+  --bs-code-bg: #f8f9fa;
+  --bs-pre-bg: #f8f9fa;
+  --bs-pre-color: #212529;
+  
+  --bs-tooltip-bg: #000000;
+  --bs-tooltip-color: #ffffff;
+  
+  --bs-modal-bg: #ffffff;
+  --bs-modal-border-color: rgba(0, 0, 0, 0.2);
+  
+  --bs-scrollbar-thumb: #c1c1c1;
+  --bs-scrollbar-track: #f1f1f1;
+}
+
+/* Dark Theme */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #212529;
+  --bs-body-color: #f8f9fa;
+  --bs-primary: #0d6efd;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-dark: #212529;
+  --bs-light: #f8f9fa;
+  
+  --bs-card-bg: #2c3034;
+  --bs-card-border-color: rgba(255, 255, 255, 0.125);
+  --bs-card-cap-bg: rgba(255, 255, 255, 0.03);
+  
+  --bs-sidebar-bg: #2c3034;
+  --bs-sidebar-border: #495057;
+  --bs-sidebar-active: rgba(13, 110, 253, 0.25);
+  
+  --bs-nav-active-color: #0d6efd;
+  --bs-nav-active-bg: rgba(13, 110, 253, 0.25);
+  
+  --bs-chart-grid: rgba(255, 255, 255, 0.1);
+  --bs-chart-text: #adb5bd;
+  --bs-chart-line: rgba(13, 110, 253, 0.8);
+  --bs-chart-fill: rgba(13, 110, 253, 0.2);
+  
+  --bs-table-border: #495057;
+  --bs-table-striped: rgba(255, 255, 255, 0.05);
+  --bs-table-hover: rgba(255, 255, 255, 0.075);
+  
+  --bs-input-bg: #2c3034;
+  --bs-input-border: #495057;
+  --bs-input-focus-border: #86b7fe;
+  
+  --bs-dropdown-bg: #2c3034;
+  --bs-dropdown-link-hover-bg: #343a40;
+  
+  --bs-code-bg: #343a40;
+  --bs-pre-bg: #343a40;
+  --bs-pre-color: #f8f9fa;
+  
+  --bs-tooltip-bg: #000000;
+  --bs-tooltip-color: #ffffff;
+  
+  --bs-modal-bg: #2c3034;
+  --bs-modal-border-color: rgba(255, 255, 255, 0.2);
+  
+  --bs-scrollbar-thumb: #495057;
+  --bs-scrollbar-track: #343a40;
+}
+
+/* Apply Theme Variables */
+
+/* Cards */
+.card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+}
+
+.card-header {
+  background-color: var(--bs-card-cap-bg);
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--bs-sidebar-bg) !important;
+  border-right: 1px solid var(--bs-sidebar-border);
+}
+
+.sidebar .nav-link.active {
+  color: var(--bs-nav-active-color);
+  background-color: var(--bs-nav-active-bg);
+}
+
+/* Tables */
+.table {
+  color: var(--bs-body-color);
+  border-color: var(--bs-table-border);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--bs-table-striped);
+}
+
+.table-hover tbody tr:hover {
+  background-color: var(--bs-table-hover);
+}
+
+/* Forms */
+.form-control, .form-select {
+  background-color: var(--bs-input-bg);
+  border-color: var(--bs-input-border);
+  color: var(--bs-body-color);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--bs-input-focus-border);
+  background-color: var(--bs-input-bg);
+  color: var(--bs-body-color);
+}
+
+/* Dropdowns */
+.dropdown-menu {
+  background-color: var(--bs-dropdown-bg);
+  border-color: var(--bs-card-border-color);
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: var(--bs-dropdown-link-hover-bg);
+}
+
+/* Modals */
+.modal-content {
+  background-color: var(--bs-modal-bg);
+  border-color: var(--bs-modal-border-color);
+}
+
+/* Tooltips */
+.tooltip .tooltip-inner {
+  background-color: var(--bs-tooltip-bg);
+  color: var(--bs-tooltip-color);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bs-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bs-scrollbar-thumb);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bs-secondary);
+}
+
+/* Chart Settings */
+.chart-container {
+  position: relative;
+  margin: auto;
+  height: 100%;
+  width: 100%;
+}
+
+/* Theme Switch Button */
+.theme-switch {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.theme-switch:hover {
+  background-color: var(--bs-dropdown-link-hover-bg);
+}
+
+/* Language Switcher */
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.language-switch:hover {
+  background-color: var(--bs-dropdown-link-hover-bg);
+}
+
+.language-flag {
+  width: 20px;
+  height: 15px;
+  object-fit: contain;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .sidebar-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .mobile-header {
+    background-color: var(--bs-sidebar-bg) !important;
+    border-bottom: 1px solid var(--bs-sidebar-border);
+  }
+}
+
+/* Additional Theme Classes */
+.bg-card {
+  background-color: var(--bs-card-bg) !important;
+}
+
+.border-themed {
+  border-color: var(--bs-card-border-color) !important;
+}
+
+/* Documentation Styling */
+.docs-sidebar {
+  position: sticky;
+  top: 2rem;
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+.docs-toc {
+  border-left: 1px solid var(--bs-sidebar-border);
+  padding-left: 1rem;
+}
+
+.docs-content img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--bs-card-border-color);
+  border-radius: 0.25rem;
+}
+
+.docs-content pre {
+  background-color: var(--bs-pre-bg);
+  color: var(--bs-pre-color);
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+/* Report and Export Styling */
+.report-card {
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.report-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Theme animation */
+.theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

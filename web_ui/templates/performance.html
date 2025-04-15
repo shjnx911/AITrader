@@ -1,0 +1,637 @@
+{% extends "layout.html" %}
+
+{% block title %}AITradeStrategist - Performance{% endblock %}
+
+{% block page_title %}Performance Analysis{% endblock %}
+
+{% block page_actions %}
+<div class="btn-group">
+    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-download me-1"></i> Export
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="#"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+        <li><a class="dropdown-item" href="#"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+        <li><a class="dropdown-item" href="#"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Performance Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 rounded-circle bg-success-subtle p-3 me-3">
+                        <i class="fas fa-chart-line text-success"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Total Profit</h6>
+                        <h4 class="mb-0 text-success">+32.6%</h4>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-success">
+                        <i class="fas fa-arrow-up me-1"></i>3.8% 
+                    </span>
+                    <span class="text-secondary ms-2">vs Last Month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 rounded-circle bg-primary-subtle p-3 me-3">
+                        <i class="fas fa-exchange-alt text-primary"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Total Trades</h6>
+                        <h4 class="mb-0">247</h4>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-primary">
+                        <i class="fas fa-arrow-up me-1"></i>18
+                    </span>
+                    <span class="text-secondary ms-2">vs Last Month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 rounded-circle bg-info-subtle p-3 me-3">
+                        <i class="fas fa-trophy text-info"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Win Rate</h6>
+                        <h4 class="mb-0">68.2%</h4>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-success">
+                        <i class="fas fa-arrow-up me-1"></i>2.5%
+                    </span>
+                    <span class="text-secondary ms-2">vs Last Month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 rounded-circle bg-warning-subtle p-3 me-3">
+                        <i class="fas fa-chart-area text-warning"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Max Drawdown</h6>
+                        <h4 class="mb-0 text-warning">-5.4%</h4>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-success">
+                        <i class="fas fa-arrow-down me-1"></i>0.8%
+                    </span>
+                    <span class="text-secondary ms-2">vs Last Month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Performance Chart Section -->
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Performance Over Time</h5>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary active" id="dailyView">Daily</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="weeklyView">Weekly</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="monthlyView">Monthly</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="performanceChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Win/Loss Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="winLossChart" height="180"></canvas>
+                <div class="row text-center mt-3">
+                    <div class="col-6">
+                        <h5 class="mb-0">168</h5>
+                        <small class="text-muted">Winning Trades</small>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="mb-0">79</h5>
+                        <small class="text-muted">Losing Trades</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Profit Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="profitDistributionChart" height="180"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trading Pairs Performance Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Trading Pairs Performance</h5>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="pairsTimeframe" data-bs-toggle="dropdown" aria-expanded="false">
+                        Last 30 Days
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="pairsTimeframe">
+                        <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+                        <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                        <li><a class="dropdown-item" href="#">Last 90 Days</a></li>
+                        <li><a class="dropdown-item" href="#">All Time</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Trading Pair</th>
+                                <th>Model</th>
+                                <th>Trades</th>
+                                <th>Win Rate</th>
+                                <th>Profit</th>
+                                <th>Max Drawdown</th>
+                                <th>Profit Factor</th>
+                                <th>Sharpe Ratio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>BTC/USDT</td>
+                                <td>BTC-LightGBM-v2</td>
+                                <td>73</td>
+                                <td>73%</td>
+                                <td class="text-success">+15.2%</td>
+                                <td class="text-warning">-3.1%</td>
+                                <td>2.7</td>
+                                <td>1.85</td>
+                            </tr>
+                            <tr>
+                                <td>ETH/USDT</td>
+                                <td>ETH-LightGBM-v1</td>
+                                <td>68</td>
+                                <td>65%</td>
+                                <td class="text-success">+9.8%</td>
+                                <td class="text-warning">-4.2%</td>
+                                <td>2.1</td>
+                                <td>1.62</td>
+                            </tr>
+                            <tr>
+                                <td>SOL/USDT</td>
+                                <td>SOL-XGBoost-v2</td>
+                                <td>52</td>
+                                <td>67%</td>
+                                <td class="text-success">+12.2%</td>
+                                <td class="text-warning">-3.8%</td>
+                                <td>2.3</td>
+                                <td>1.75</td>
+                            </tr>
+                            <tr>
+                                <td>XRP/USDT</td>
+                                <td>XRP-RandomForest-v1</td>
+                                <td>45</td>
+                                <td>58%</td>
+                                <td class="text-danger">-0.5%</td>
+                                <td class="text-danger">-5.4%</td>
+                                <td>0.98</td>
+                                <td>-0.15</td>
+                            </tr>
+                            <tr>
+                                <td>ETH/USDT</td>
+                                <td>ETH-XGBoost-v1</td>
+                                <td>9</td>
+                                <td>61%</td>
+                                <td class="text-success">+1.5%</td>
+                                <td class="text-warning">-2.8%</td>
+                                <td>1.3</td>
+                                <td>0.92</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Trade Analysis Section -->
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Trades Analysis</h5>
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" class="form-control form-control-sm" placeholder="Search trades...">
+                    <button class="btn btn-outline-secondary btn-sm" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Date/Time</th>
+                                <th>Pair</th>
+                                <th>Type</th>
+                                <th>Entry</th>
+                                <th>Exit</th>
+                                <th>Profit</th>
+                                <th>Duration</th>
+                                <th>Model</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-04-15 08:15</td>
+                                <td>BTC/USDT</td>
+                                <td><span class="badge bg-success">Buy</span></td>
+                                <td>67,245.80</td>
+                                <td>69,423.15</td>
+                                <td class="text-success">+3.24%</td>
+                                <td>2h 45m</td>
+                                <td>BTC-LightGBM</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="View Details">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-04-15 07:22</td>
+                                <td>ETH/USDT</td>
+                                <td><span class="badge bg-danger">Sell</span></td>
+                                <td>3,456.75</td>
+                                <td>3,412.30</td>
+                                <td class="text-success">+1.28%</td>
+                                <td>45m</td>
+                                <td>ETH-LightGBM</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="View Details">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-04-15 06:58</td>
+                                <td>SOL/USDT</td>
+                                <td><span class="badge bg-success">Buy</span></td>
+                                <td>142.80</td>
+                                <td>139.65</td>
+                                <td class="text-danger">-2.21%</td>
+                                <td>1h 15m</td>
+                                <td>SOL-XGBoost</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="View Details">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-04-15 04:30</td>
+                                <td>BTC/USDT</td>
+                                <td><span class="badge bg-success">Buy</span></td>
+                                <td>66,890.45</td>
+                                <td>67,245.80</td>
+                                <td class="text-success">+0.53%</td>
+                                <td>3h 28m</td>
+                                <td>BTC-LightGBM</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="View Details">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-04-15 01:15</td>
+                                <td>XRP/USDT</td>
+                                <td><span class="badge bg-danger">Sell</span></td>
+                                <td>0.5120</td>
+                                <td>0.5015</td>
+                                <td class="text-success">+2.05%</td>
+                                <td>2h 10m</td>
+                                <td>XRP-RF</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="View Details">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <nav>
+                    <ul class="pagination pagination-sm justify-content-end mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Performance Metrics</h5>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="timeframeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Last 30 Days
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="timeframeDropdown">
+                        <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+                        <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                        <li><a class="dropdown-item" href="#">Last 90 Days</a></li>
+                        <li><a class="dropdown-item" href="#">All Time</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Total Return</td>
+                                <td class="text-end text-success">+32.6%</td>
+                            </tr>
+                            <tr>
+                                <td>Annual Return</td>
+                                <td class="text-end text-success">+112.4%</td>
+                            </tr>
+                            <tr>
+                                <td>Sharpe Ratio</td>
+                                <td class="text-end">1.68</td>
+                            </tr>
+                            <tr>
+                                <td>Sortino Ratio</td>
+                                <td class="text-end">2.15</td>
+                            </tr>
+                            <tr>
+                                <td>Calmar Ratio</td>
+                                <td class="text-end">4.25</td>
+                            </tr>
+                            <tr>
+                                <td>Max Drawdown</td>
+                                <td class="text-end text-warning">-5.4%</td>
+                            </tr>
+                            <tr>
+                                <td>Profit Factor</td>
+                                <td class="text-end">2.45</td>
+                            </tr>
+                            <tr>
+                                <td>Recovery Factor</td>
+                                <td class="text-end">3.85</td>
+                            </tr>
+                            <tr>
+                                <td>Win Rate</td>
+                                <td class="text-end">68.2%</td>
+                            </tr>
+                            <tr>
+                                <td>Average Win</td>
+                                <td class="text-end text-success">+2.3%</td>
+                            </tr>
+                            <tr>
+                                <td>Average Loss</td>
+                                <td class="text-end text-danger">-1.2%</td>
+                            </tr>
+                            <tr>
+                                <td>Win/Loss Ratio</td>
+                                <td class="text-end">1.92</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-grid gap-2 mt-3">
+                    <button class="btn btn-outline-primary" type="button">
+                        <i class="fas fa-file-export me-1"></i> Export Full Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Performance Chart
+    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+    let performanceChart = new Chart(performanceCtx, {
+        type: 'line',
+        data: {
+            labels: ['Apr 1', 'Apr 2', 'Apr 3', 'Apr 4', 'Apr 5', 'Apr 6', 'Apr 7', 'Apr 8', 'Apr 9', 'Apr 10', 
+                     'Apr 11', 'Apr 12', 'Apr 13', 'Apr 14', 'Apr 15'],
+            datasets: [{
+                label: 'Cumulative Return',
+                data: [0, 0.8, 1.5, 2.2, 3.0, 2.7, 3.5, 4.2, 5.8, 7.2, 
+                       8.5, 9.8, 10.5, 11.8, 12.5],
+                borderColor: 'rgba(40, 167, 69, 1)',
+                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) label += ': ';
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y + '%';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Win/Loss Chart
+    const winLossCtx = document.getElementById('winLossChart').getContext('2d');
+    const winLossChart = new Chart(winLossCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Win', 'Loss'],
+            datasets: [{
+                data: [68.2, 31.8],
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.8)',
+                    'rgba(220, 53, 69, 0.8)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Profit Distribution Chart
+    const profitDistCtx = document.getElementById('profitDistributionChart').getContext('2d');
+    const profitDistChart = new Chart(profitDistCtx, {
+        type: 'bar',
+        data: {
+            labels: ['< -3%', '-3% to -2%', '-2% to -1%', '-1% to 0%', '0% to 1%', '1% to 2%', '2% to 3%', '> 3%'],
+            datasets: [{
+                label: 'Trade Count',
+                data: [5, 12, 25, 37, 62, 53, 28, 25],
+                backgroundColor: [
+                    'rgba(220, 53, 69, 0.9)',
+                    'rgba(220, 53, 69, 0.7)',
+                    'rgba(220, 53, 69, 0.5)',
+                    'rgba(220, 53, 69, 0.3)',
+                    'rgba(40, 167, 69, 0.3)',
+                    'rgba(40, 167, 69, 0.5)',
+                    'rgba(40, 167, 69, 0.7)',
+                    'rgba(40, 167, 69, 0.9)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Toggle between daily, weekly, and monthly views
+    document.getElementById('dailyView').addEventListener('click', function() {
+        setActiveButton(this);
+        updatePerformanceChart('daily');
+    });
+    
+    document.getElementById('weeklyView').addEventListener('click', function() {
+        setActiveButton(this);
+        updatePerformanceChart('weekly');
+    });
+    
+    document.getElementById('monthlyView').addEventListener('click', function() {
+        setActiveButton(this);
+        updatePerformanceChart('monthly');
+    });
+    
+    function setActiveButton(button) {
+        document.querySelectorAll('#dailyView, #weeklyView, #monthlyView').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+    }
+    
+    function updatePerformanceChart(period) {
+        let labels, data;
+        
+        if (period === 'daily') {
+            labels = ['Apr 1', 'Apr 2', 'Apr 3', 'Apr 4', 'Apr 5', 'Apr 6', 'Apr 7', 'Apr 8', 'Apr 9', 'Apr 10', 
+                     'Apr 11', 'Apr 12', 'Apr 13', 'Apr 14', 'Apr 15'];
+            data = [0, 0.8, 1.5, 2.2, 3.0, 2.7, 3.5, 4.2, 5.8, 7.2, 
+                   8.5, 9.8, 10.5, 11.8, 12.5];
+        } else if (period === 'weekly') {
+            labels = ['W1 Jan', 'W2 Jan', 'W3 Jan', 'W4 Jan', 'W1 Feb', 'W2 Feb', 'W3 Feb', 'W4 Feb', 
+                     'W1 Mar', 'W2 Mar', 'W3 Mar', 'W4 Mar', 'W1 Apr', 'W2 Apr'];
+            data = [0, 2.5, 5.0, 7.8, 10.2, 12.5, 14.8, 17.2, 20.5, 22.8, 25.5, 28.2, 30.5, 32.6];
+        } else {
+            labels = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
+            data = [0, 8.5, 15.2, 22.5, 28.8, 32.5, 42.6];
+        }
+        
+        performanceChart.data.labels = labels;
+        performanceChart.data.datasets[0].data = data;
+        performanceChart.update();
+    }
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}

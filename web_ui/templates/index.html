@@ -1,0 +1,267 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block page_title %}Trading Dashboard{% endblock %}
+
+{% block page_actions %}
+<button id="refreshDashboard" class="btn btn-outline-primary">
+    <i class="fas fa-sync-alt me-1"></i> Refresh
+    <span id="refreshIndicator" class="refresh-indicator d-none"></span>
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <!-- Stats Cards -->
+    <div class="col-md-3">
+        <div class="card stat-card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-0">Models</h6>
+                        <h3 id="modelsCount" class="stat-card-value mb-0">--</h3>
+                    </div>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-0">Active Models</h6>
+                        <h3 id="activeModelsCount" class="stat-card-value mb-0">--</h3>
+                    </div>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-0">Trading Pairs</h6>
+                        <h3 id="pairsCount" class="stat-card-value mb-0">--</h3>
+                    </div>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-0">Performance</h6>
+                        <div id="recentPerformance">
+                            <div class="placeholder-glow">
+                                <span class="placeholder col-6"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Performance Chart -->
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-chart-area me-1"></i>
+                Performance (Last 30 Days)
+            </div>
+            <div class="card-body">
+                <div id="performanceChartContainer" class="chart-container">
+                    <div class="chart-loading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trade Distribution Chart -->
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-chart-pie me-1"></i>
+                Trade Distribution
+            </div>
+            <div class="card-body">
+                <div id="tradeDistributionContainer" class="chart-container">
+                    <div class="chart-loading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <canvas id="tradeDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Active Models -->
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-robot me-1"></i>
+                Active Models
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Model Name</th>
+                                <th>Pair</th>
+                                <th>Timeframe</th>
+                                <th>Created</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activeModelsTable">
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span class="ms-2">Loading models...</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a href="{{ url_for('models') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-list me-1"></i> View All Models
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Metrics -->
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-history me-1"></i>
+                Recent Metrics
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Pair</th>
+                                <th>Timeframe</th>
+                                <th>Win Rate</th>
+                                <th>Profit</th>
+                                <th>Trades</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if recent_metrics %}
+                                {% for metric in recent_metrics %}
+                                <tr>
+                                    <td>{{ metric.pair }}</td>
+                                    <td>{{ metric.timeframe }}</td>
+                                    <td class="{% if metric.win_rate >= 50 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ "%.2f"|format(metric.win_rate) }}%
+                                    </td>
+                                    <td class="{% if metric.profit_percent >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ "%.2f"|format(metric.profit_percent) }}%
+                                    </td>
+                                    <td>{{ metric.total_trades }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No recent metrics available</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a href="{{ url_for('performance') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-chart-bar me-1"></i> View Performance
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Information Card -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-server me-1"></i>
+                System Information
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <h6 class="mb-1">GPU Acceleration</h6>
+                            <div id="gpuStatusFull">
+                                {% if gpu_available %}
+                                <span class="badge bg-success me-1">Enabled</span> AMD GPU with DirectML
+                                {% else %}
+                                <span class="badge bg-secondary me-1">Disabled</span> Running in CPU mode
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <h6 class="mb-1">ONNX Runtime</h6>
+                            <span class="badge bg-success me-1">Enabled</span> Optimized inference
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <h6 class="mb-1">Trading Mode</h6>
+                            <span class="badge bg-info me-1">Futures</span> Isolated margin
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <h6 class="mb-1">Exchange</h6>
+                            <span class="badge bg-primary me-1">Binance</span> CCXT integration
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

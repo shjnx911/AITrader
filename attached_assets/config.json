@@ -1,0 +1,128 @@
+{
+    "max_open_trades": 5,
+    "stake_currency": "USDT",
+    "stake_amount": "unlimited",
+    "tradable_balance_ratio": 0.99,
+    "fiat_display_currency": "USD",
+    "dry_run": true,
+    "dry_run_wallet": 1000,
+    "cancel_open_orders_on_exit": true,
+    "trading_mode": "futures",
+    "margin_mode": "isolated",
+    "unfilledtimeout": {
+        "entry": 10,
+        "exit": 10,
+        "exit_timeout_count": 0,
+        "unit": "minutes"
+    },
+    "entry_pricing": {
+        "price_side": "same",
+        "use_order_book": true,
+        "order_book_top": 1,
+        "price_last_balance": 0.0,
+        "check_depth_of_market": {
+            "enabled": false,
+            "bids_to_ask_delta": 1
+        }
+    },
+    "exit_pricing": {
+        "price_side": "same",
+        "use_order_book": true,
+        "order_book_top": 1
+    },
+    "exchange": {
+        "name": "binance",
+        "key": "",
+        "secret": "",
+        "ccxt_config": {
+            "enableRateLimit": true
+        },
+        "ccxt_async_config": {
+            "enableRateLimit": true,
+            "rateLimit": 200
+        },
+        "pair_whitelist": [
+            "BTC/USDT:USDT",
+            "ETH/USDT:USDT",
+            "SOL/USDT:USDT",
+            "BNB/USDT:USDT",
+            "ADA/USDT:USDT"
+        ],
+        "pair_blacklist": []
+    },
+    "pairlists": [
+        {
+            "method": "StaticPairList"
+        }
+    ],
+    "edge": {
+        "enabled": false,
+        "process_throttle_secs": 3600,
+        "calculate_since_number_of_days": 7,
+        "allowed_risk": 0.01,
+        "stoploss_range_min": -0.01,
+        "stoploss_range_max": -0.1,
+        "stoploss_range_step": -0.01,
+        "minimum_winrate": 0.6,
+        "minimum_expectancy": 0.2,
+        "min_trade_number": 10,
+        "max_trade_duration_minute": 1440,
+        "remove_pumps": false
+    },
+    "telegram": {
+        "enabled": false,
+        "token": "",
+        "chat_id": ""
+    },
+    "api_server": {
+        "enabled": true,
+        "listen_ip_address": "0.0.0.0",
+        "listen_port": 8000,
+        "verbosity": "error",
+        "enable_openapi": true,
+        "jwt_secret_key": "super-secret-key",
+        "username": "freqtrader",
+        "password": "freqtrader"
+    },
+    "bot_name": "freqai_lightgbm",
+    "initial_state": "running",
+    "forcebuy_enable": false,
+    "internals": {
+        "process_throttle_secs": 5
+    },
+    "strategy": "FreqAI_LGBM_Strategy",
+    "strategy_path": "user_data/strategies/",
+    "freqai": {
+        "enabled": true,
+        "identifier": "lightgbm_directml",
+        "live_retrain_hours": 0.5,
+        "follow_trends": true,
+        "purge_old_models": true,
+        "train_period_days": 30,
+        "backtest_period_days": 7,
+        "startup_candles": 100,
+        "expiration_hours": 48,
+        "identifier_limit": 5,
+        "save_backtest_models": false,
+        "fit_live_predictions_candles": 300,
+        "data_kitchen_thread_count": 4,
+        "write_metrics_to_disk": true,
+        "save_data_files": false,
+        "feature_parameters": {
+            "label_period_candles": 24
+        },
+        "data_split_parameters": {
+            "test_size": 0.25,
+            "shuffle": true,
+            "stratify": true
+        },
+        "model_training_parameters": {
+            "n_estimators": 800,
+            "learning_rate": 0.02,
+            "max_depth": 6,
+            "num_leaves": 32,
+            "boosting_type": "goss",
+            "objective": "binary"
+        }
+    }
+}

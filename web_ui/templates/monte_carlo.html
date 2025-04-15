@@ -1,0 +1,377 @@
+{% extends "layout.html" %}
+
+{% block title %}Monte Carlo Simulator{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Monte Carlo Simulator</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Simulation Parameters</h5>
+                </div>
+                <div class="card-body">
+                    <form id="simulationForm">
+                        <div class="form-group mb-3">
+                            <label for="modelSelector">AI Model</label>
+                            <select class="form-select" id="modelSelector" required>
+                                <option value="" selected disabled>Select a model</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="initialCapital">Initial Capital ($)</label>
+                            <input type="number" class="form-control" id="initialCapital" value="10000">
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="riskPerTrade">Risk Per Trade (%)</label>
+                            <input type="number" class="form-control" id="riskPerTrade" value="1" min="0.1" max="10" step="0.1">
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="tradingDays">Trading Days</label>
+                            <input type="number" class="form-control" id="tradingDays" value="30" min="1">
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="tradesPerDay">Trades Per Day</label>
+                            <input type="number" class="form-control" id="tradesPerDay" value="3" min="0.1" step="0.1">
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="winRateVar">Win Rate Variance (%)</label>
+                            <input type="number" class="form-control" id="winRateVar" value="5" min="0" max="20">
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="simulations">Number of Simulations</label>
+                            <input type="number" class="form-control" id="simulations" value="1000" min="100" max="5000">
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="considerFees" checked>
+                            <label class="form-check-label" for="considerFees">Consider Trading Fees</label>
+                        </div>
+                        
+                        <button type="submit" id="runSimulation" class="btn btn-primary">Run Simulation</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Simulation Results</h5>
+                </div>
+                <div class="card-body">
+                    <div id="simulationResults" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <h6>Summary Statistics</h6>
+                                    <table class="table table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td>Mean Profit:</td>
+                                                <td id="meanProfit">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Success Rate:</td>
+                                                <td id="successRate">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Max Drawdown:</td>
+                                                <td id="maxDrawdown">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sharpe Ratio:</td>
+                                                <td id="sharpeRatio">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Profit Factor:</td>
+                                                <td id="profitFactor">-</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <h6>Risk Assessment</h6>
+                                    <div id="riskAssessment" class="alert alert-info">
+                                        Run a simulation to see risk assessment.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <h6>Equity Curves</h6>
+                                <div id="equityCurvesChart" style="height: 300px;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h6>Profit Distribution</h6>
+                                <div id="profitDistributionChart" style="height: 250px;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Optimization Suggestions</h6>
+                                <div id="optimizationSuggestions">
+                                    <div class="alert alert-info">
+                                        Run a simulation to see optimization suggestions.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6>Advanced Suggestion</h6>
+                                <div id="advancedSuggestion" class="alert alert-secondary">
+                                    Run a simulation to see advanced suggestions.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="loadingIndicator" style="display: none; text-align: center;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Running simulation. This may take a moment...</p>
+                    </div>
+                    
+                    <div id="noResultsMessage" style="text-align: center; padding: 50px 0;">
+                        <i class="bi bi-bar-chart-line fs-2 text-muted"></i>
+                        <p class="mt-2 text-muted">Run a simulation to see results.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/plotly.js@2.18.2/dist/plotly.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load available models
+    fetchModels();
+    
+    // Handle form submission
+    document.getElementById('simulationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        runMonteCarlo();
+    });
+    
+    function fetchModels() {
+        fetch('/api/models')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const modelSelector = document.getElementById('modelSelector');
+                    modelSelector.innerHTML = '<option value="" selected disabled>Select a model</option>';
+                    
+                    data.models.forEach(model => {
+                        const option = document.createElement('option');
+                        option.value = model.id;
+                        option.textContent = `${model.name} (${model.pair})`;
+                        modelSelector.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching models:', error));
+    }
+    
+    function runMonteCarlo() {
+        // Get form values
+        const modelId = document.getElementById('modelSelector').value;
+        const initialCapital = document.getElementById('initialCapital').value;
+        const riskPerTrade = document.getElementById('riskPerTrade').value;
+        const tradingDays = document.getElementById('tradingDays').value;
+        const tradesPerDay = document.getElementById('tradesPerDay').value;
+        const winRateVar = document.getElementById('winRateVar').value;
+        const simulations = document.getElementById('simulations').value;
+        const considerFees = document.getElementById('considerFees').checked;
+        
+        // Validate form
+        if (!modelId) {
+            alert('Please select a model');
+            return;
+        }
+        
+        // Show loading indicator
+        document.getElementById('noResultsMessage').style.display = 'none';
+        document.getElementById('simulationResults').style.display = 'none';
+        document.getElementById('loadingIndicator').style.display = 'block';
+        
+        // Prepare request
+        const requestData = {
+            model_id: parseInt(modelId),
+            initial_capital: parseFloat(initialCapital),
+            risk_per_trade: parseFloat(riskPerTrade),
+            trading_days: parseInt(tradingDays),
+            trades_per_day: parseFloat(tradesPerDay),
+            win_rate_variance: parseFloat(winRateVar),
+            simulations: parseInt(simulations),
+            consider_fees: considerFees
+        };
+        
+        // Send request
+        fetch('/backtest_ai/api/run_monte_carlo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayResults(data.results, data.ai_analysis);
+            } else {
+                alert('Error: ' + data.message);
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('noResultsMessage').style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error running Monte Carlo simulation:', error);
+            alert('Error running simulation. Please try again.');
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('noResultsMessage').style.display = 'block';
+        });
+    }
+    
+    function displayResults(results, analysis) {
+        // Hide loading indicator and show results
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('simulationResults').style.display = 'block';
+        
+        // Update summary statistics
+        document.getElementById('meanProfit').textContent = '$' + results.mean_profit.toFixed(2) + ' (' + results.mean_profit_pct.toFixed(2) + '%)';
+        document.getElementById('successRate').textContent = results.success_rate.toFixed(2) + '%';
+        document.getElementById('maxDrawdown').textContent = '$' + results.max_drawdown.toFixed(2);
+        document.getElementById('sharpeRatio').textContent = results.sharpe_ratio.toFixed(3);
+        document.getElementById('profitFactor').textContent = results.profit_factor.toFixed(3);
+        
+        // Update risk assessment
+        document.getElementById('riskAssessment').textContent = analysis.risk_assessment;
+        document.getElementById('riskAssessment').className = results.success_rate > 70 ? 'alert alert-success' : 
+                                                             results.success_rate > 50 ? 'alert alert-warning' : 
+                                                             'alert alert-danger';
+        
+        // Update optimization suggestions
+        const suggestionsDiv = document.getElementById('optimizationSuggestions');
+        suggestionsDiv.innerHTML = '';
+        
+        if (analysis.optimizations.length === 0) {
+            suggestionsDiv.innerHTML = '<div class="alert alert-info">No specific optimization suggestions.</div>';
+        } else {
+            const ul = document.createElement('ul');
+            ul.className = 'list-group';
+            
+            analysis.optimizations.forEach(opt => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.innerHTML = `<strong>${opt.parameter}:</strong> Change from ${opt.current} to ${opt.suggested}<br><small>${opt.impact}</small>`;
+                ul.appendChild(li);
+            });
+            
+            suggestionsDiv.appendChild(ul);
+        }
+        
+        // Update advanced suggestion
+        document.getElementById('advancedSuggestion').textContent = analysis.advanced_suggestion;
+        
+        // Plot equity curves
+        plotEquityCurves(results);
+        
+        // Plot profit distribution
+        plotProfitDistribution(results);
+    }
+    
+    function plotEquityCurves(results) {
+        const layout = {
+            showlegend: false,
+            xaxis: { title: 'Trades' },
+            yaxis: { title: 'Equity ($)' },
+            margin: { l: 40, r: 10, t: 10, b: 40 },
+            autosize: true,
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            hovermode: 'closest'
+        };
+        
+        const traces = [];
+        
+        // Add percentile curves
+        const percentiles = ['p10', 'p25', 'p50', 'p75', 'p90'];
+        const colors = ['rgba(220,53,69,0.8)', 'rgba(255,193,7,0.8)', 'rgba(25,135,84,0.8)', 'rgba(255,193,7,0.8)', 'rgba(220,53,69,0.8)'];
+        const labels = ['10th percentile', '25th percentile', 'Median', '75th percentile', '90th percentile'];
+        
+        for (let i = 0; i < percentiles.length; i++) {
+            traces.push({
+                y: results.percentiles[percentiles[i]],
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: colors[i], width: i === 2 ? 3 : 2 },
+                name: labels[i],
+                hoverinfo: 'y+name'
+            });
+        }
+        
+        // Add sample curves (light gray)
+        for (let i = 0; i < Math.min(10, results.sample_curves.length); i++) {
+            traces.push({
+                y: results.sample_curves[i],
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: 'rgba(150,150,150,0.2)', width: 1 },
+                name: 'Sample Path',
+                hoverinfo: 'none',
+                showlegend: false
+            });
+        }
+        
+        Plotly.newPlot('equityCurvesChart', traces, layout, {responsive: true});
+    }
+    
+    function plotProfitDistribution(results) {
+        // Create a histogram of final results
+        const trace = {
+            x: results.final_distribution,
+            type: 'histogram',
+            marker: {
+                color: 'rgba(0, 123, 255, 0.7)',
+                line: {
+                    color: 'rgba(0, 123, 255, 1)',
+                    width: 1
+                }
+            },
+            name: 'Final Equity Distribution'
+        };
+        
+        const layout = {
+            showlegend: false,
+            xaxis: { title: 'Final Equity ($)' },
+            yaxis: { title: 'Frequency' },
+            margin: { l: 40, r: 10, t: 10, b: 40 },
+            autosize: true,
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            bargap: 0.05
+        };
+        
+        Plotly.newPlot('profitDistributionChart', [trace], layout, {responsive: true});
+    }
+});
+</script>
+{% endblock %}
